@@ -7,6 +7,10 @@
 - 補丁只在你自己的電腦上修改遊戲檔，散布的內容只有譯文、字型和本程式，不含任何遊戲原始檔。
 - 安裝前會自動備份原檔，可以隨時一鍵還原。
 
+![遊戲內的導師筆記與物品說明](docs/screenshot-notebook.png)
+
+<sub>1.0 版畫面。1.1 版起內文改用源樣黑體，行距也已對齊筆記本格線。</sub>
+
 ## 安裝
 
 1. 到 [Releases](../../releases) 下載 `ProbablyStolen-zhTW-Patcher.exe`。
