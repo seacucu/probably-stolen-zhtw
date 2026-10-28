@@ -25,7 +25,7 @@ from typing import Callable, Optional
 import UnityPy
 from UnityPy.helpers.TypeTreeHelper import TypeTreeNode
 
-PATCH_VERSION = "1.0.0"
+PATCH_VERSION = "1.1.0"
 DATA_FOLDER = "Probably Stolen_Data"
 EXE_NAME = "Probably Stolen.exe"
 BACKUP_DIR = "zhTW_backup"
@@ -52,14 +52,19 @@ KNOWN_ORIGINALS = {
 
 # Font objects (by name) -> replacement font file in data/fonts.
 FONT_SWAPS = {
-    "NotoSansSC-VariableFont_wght": ("TaipeiSansTCBeta-Regular.ttf", "Taipei Sans TC Beta"),
+    "NotoSansSC-VariableFont_wght": ("GenYoGothic2TW-L.otf", "GenYoGothic2 TW"),
     "WDXLLubrifontSC-Regular": ("WDXLLubrifontTC-Regular.ttf", "WDXL Lubrifont TC"),
     "MaShanZheng-Regular": ("LXGWWenKaiTC-Regular.ttf", "LXGW WenKai TC"),
 }
 # TMP font assets whose pre-baked SC glyphs must be cleared so glyphs regenerate from the TC fonts.
 TMP_RESET = ("NotoSansSC-VariableFont_wght", "WDXLLubrifontSC-Regular SDF", "MaShanZheng-Regular SDF")
+# Extra character spacing per TMP asset, in 1/100 em (TMP normalSpacingOffset).
+SPACING = {"NotoSansSC-VariableFont_wght": 5}
 # The CJK TMP asset used as fallback for the western fonts below.
 CJK_FALLBACK = "NotoSansSC-VariableFont_wght"
+# Western asset whose line metrics the CJK asset copies: the UI (e.g. the notebook's ruled lines) is laid
+# out for Noto Sans, and the Source Han metrics are ~6% taller, so Chinese lines drift off the rules.
+LINE_METRICS_FROM = "NotoSans-Medium SDF"
 # Western TMP assets used directly by some UI (language dropdown, main-menu buttons).
 WESTERN_TMP = ("NotoSans-Bold SDF", "NotoSans-Medium SDF", "NotoSans-VariableFont_wdth,wght SDF",
                "NotoSerif-Medium SDF", "NotoSans-BoldItalic SDF", "NotoSans-MediumItalic SDF")
@@ -259,9 +264,10 @@ def _patch_fonts(src: Path, ggm: Path, log: Log) -> bytes:
             name = _mono_name(obj.get_raw_data())
             if name in TMP_RESET or name in WESTERN_TMP:
                 tmp_by_name[name] = obj
-    missing = (set(FONT_SWAPS) - swapped) | (set(TMP_RESET) - set(tmp_by_name))
+    missing = (set(FONT_SWAPS) - swapped) | ((set(TMP_RESET) | {LINE_METRICS_FROM}) - set(tmp_by_name))
     if missing:
         raise PatchError("找不到以下字型資產，遊戲版本可能已改變：" + "、".join(sorted(missing)))
+    ref_face = tmp_by_name[LINE_METRICS_FROM].read_typetree(font_node)["m_FaceInfo"]
     for name in TMP_RESET:
         obj = tmp_by_name[name]
         t = obj.read_typetree(font_node)
@@ -273,6 +279,12 @@ def _patch_fonts(src: Path, ggm: Path, log: Log) -> bytes:
         t["m_AtlasTextureIndex"] = 0
         t["m_FontFeatureTable"]["m_GlyphPairAdjustmentRecords"] = []
         t["m_KerningTable"]["kerningPairs"] = []
+        t["normalSpacingOffset"] = SPACING.get(name, t["normalSpacingOffset"])
+        if name == CJK_FALLBACK:
+            face = t["m_FaceInfo"]
+            scale = face["m_PointSize"] / ref_face["m_PointSize"]
+            for key in ("m_LineHeight", "m_AscentLine", "m_DescentLine"):
+                face[key] = ref_face[key] * scale
         obj.save_typetree(t, font_node)
     fallback = {"m_FileID": 0, "m_PathID": tmp_by_name[CJK_FALLBACK].path_id}
     for name in WESTERN_TMP:
@@ -342,6 +354,9 @@ def install(game: Path, log: Log = print, force: bool = False) -> None:
     log("寫入遊戲資料夾……")
     for rel, blob in ((ZH_BUNDLE, zh), (CATALOG, cat), (SHAREDASSETS, fonts), (LEVEL0, menu)):
         _write_atomic(data / rel, blob)
+    info = json.loads(manifest_path.read_text(encoding="utf-8"))
+    info["patch_version"] = PATCH_VERSION
+    manifest_path.write_text(json.dumps(info, ensure_ascii=False, indent=1), encoding="utf-8")
     log("安裝完成！啟動遊戲後，在右上角語言選單選擇「繁體中文」。")
 
 

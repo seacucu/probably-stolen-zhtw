@@ -41,7 +41,7 @@ Steam 更新遊戲時可能會覆蓋模組，重新執行補丁程式即可。
 
 | 用途 | 原字型 | 替換為 |
 |---|---|---|
-| 內文 | Noto Sans SC | [台北黑體 Taipei Sans TC Beta](https://sites.google.com/view/jtfoundry)（翰字鑄造） |
+| 內文 | Noto Sans SC | [源樣黑體 GenYo Gothic 2 TW](https://github.com/ButTaiwan/genyog-font)（ButTaiwan） |
 | 標題 | WDXL Lubrifont SC | [WDXL Lubrifont TC](https://fonts.google.com/specimen/WDXL+Lubrifont+TC) |
 | 手寫 | Ma Shan Zheng | [霞鶩文楷 TC](https://github.com/lxgw/LxgwWenkaiTC) |
 

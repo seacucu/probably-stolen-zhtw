@@ -1,10 +1,10 @@
-Taipei Sans TC Beta (TaipeiSansTCBeta-Regular.ttf)
-Copyright (c) JT Foundry (翰字鑄造), https://sites.google.com/view/jtfoundry
-Taipei Sans TC is a modified font of Source Han Sans, Copyright 2014-2019 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.
+GenYo Gothic 2 TW (GenYoGothic2TW-L.otf)
+Copyright (c) ButTaiwan, https://github.com/ButTaiwan/genyog-font
+GenYo Gothic is a modified font of Source Han Sans, Copyright 2014-2019 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
-https://openfontlicense.org
+http://scripts.sil.org/OFL
 
 
 -----------------------------------------------------------
