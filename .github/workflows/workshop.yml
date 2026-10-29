@@ -54,6 +54,8 @@ jobs:
       - name: Write Workshop item VDF
         env:
           NOTES: ${{ github.event.release.body }}
+          # A full (non-pre) release makes the item public; pre-releases and re-runs keep its visibility.
+          PUBLIC: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         run: |
           python3 - <<'EOF'
           import os, pathlib
@@ -70,6 +72,8 @@ jobs:
               "description": (w / "description.txt").read_text(encoding="utf-8").strip(),
               "changenote": f"{tag}\n{notes}" if notes else tag,
           }
+          if os.environ.get("PUBLIC") == "true":
+              fields["visibility"] = "0"
           body = "\n".join(f"\t{q(k)} {q(v)}" for k, v in fields.items())
           pathlib.Path("workshop_item.vdf").write_text('"workshopitem"\n{\n' + body + "\n}\n", encoding="utf-8")
           EOF

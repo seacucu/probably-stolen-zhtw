@@ -7,16 +7,24 @@
 - 不修改任何遊戲檔與存檔，停用模組就回到原版。
 - 試玩版用的安裝程式在 [`demo` 分支](../../tree/demo)與 [v1.1.0](../../releases/tag/v1.1.0)，正式版請用本模組。
 
-![遊戲內的導師筆記與物品說明](docs/screenshot-notebook.png)
+![主選單](docs/main-menu.png)
 
-<sub>試玩版 1.0 版畫面。現在內文改用源樣黑體，行距也已對齊筆記本格線。</sub>
+### 改寫前後對照
+
+| 操作提示（上：原版簡體／下：本模組） | 導師筆記（左：本模組／右：原版簡體） |
+|---|---|
+| ![操作提示對照](docs/compare-controls.png) | ![導師筆記對照](docs/compare-mentor-note.png) |
+
+| 香菸真偽鑑定手冊（左：原版簡體／右：本模組） | 房租提醒（上：原版簡體／下：本模組） |
+|---|---|
+| ![鑑定手冊對照](docs/compare-cigarette-manual.png) | ![房租提醒對照](docs/compare-rent.png) |
 
 ## 安裝
 
 ### Steam 工作坊（建議）
 
 1. 在[工作坊](https://steamcommunity.com/sharedfiles/filedetails/?id=3829248318)訂閱本模組，啟動遊戲。
-2. 在主選單的「Mods」畫面啟用「Traditional Chinese (Taiwan)」，再重新啟動遊戲。
+2. 在主選單的「改裝件」（Mods）畫面啟用「Traditional Chinese (Taiwan)」，再重新啟動遊戲。
 3. 在主選單右上角的語言選單選「正體中文」。
 
 ### 手動安裝
