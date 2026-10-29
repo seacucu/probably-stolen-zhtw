@@ -28,26 +28,49 @@ namespace ProbablyStolenZhTW
     [HarmonyPatch(typeof(MainMenuUIController), nameof(MainMenuUIController.HandleLocaleDropdown))]
     internal static class HandleLocaleDropdownPatch
     {
-        private static void Postfix(MainMenuUIController __instance) => LanguageMenu.Rename(__instance);
+        private static void Postfix(MainMenuUIController __instance) => LanguageMenu.AddOption(__instance);
     }
 
-    // The game's Simplified Chinese option now shows Traditional Chinese, so it is labelled as such.
+    [HarmonyPatch(typeof(MainMenuUIController), nameof(MainMenuUIController.OnLocaleChanged))]
+    internal static class OnLocaleChangedPatch
+    {
+        private static void Prefix(ref int localeIndex) => LanguageMenu.Redirect(ref localeIndex);
+    }
+
+    // Adds a Traditional Chinese option after the game's languages. It uses the game's zh locale, which
+    // the mod translates, so it is shown as the selected language whenever zh is.
     internal static class LanguageMenu
     {
-        private const string Original = "Simplified Chinese";
+        private const string Chinese = "Simplified Chinese";
         private const string Label = "正體中文";
+        private static int _chinese = -1;
+        private static int _added = -1;
 
-        internal static void Rename(MainMenuUIController menu)
+        internal static void AddOption(MainMenuUIController menu)
         {
             var dropdown = menu != null ? menu.localeDropdown : null;
             if (dropdown == null)
                 return;
-            foreach (var option in dropdown.options)
+            var options = dropdown.options;
+            _chinese = options.FindIndex(o => o.text == Chinese);
+            if (_chinese < 0)
+                return;
+            _added = options.FindIndex(o => o.text == Label);
+            if (_added < 0)
             {
-                if (option.text == Original)
-                    option.text = Label;
+                _added = options.Count;
+                options.Add(new TMP_Dropdown.OptionData(Label));
             }
+            if (dropdown.value == _chinese)
+                dropdown.SetValueWithoutNotify(_added);
             dropdown.RefreshShownValue();
+        }
+
+        // The game ignores indices past its own list, so the added option selects the zh locale.
+        internal static void Redirect(ref int index)
+        {
+            if (_added >= 0 && index == _added)
+                index = _chinese;
         }
     }
 }

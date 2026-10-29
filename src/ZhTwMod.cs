@@ -60,7 +60,7 @@ namespace ProbablyStolenZhTW
             _refreshed = true;
             Strings.RefreshShownText();
             Fonts.SwapTexts();
-            LanguageMenu.Rename(MainMenuUIController.Instance);
+            LanguageMenu.AddOption(MainMenuUIController.Instance);
         }
     }
 }
