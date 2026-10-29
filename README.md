@@ -71,7 +71,7 @@
 ```
 tools\build.ps1             # 編譯並組出 dist\seacucu.zh-tw\ 與 dist\seacucu.zh-tw.zip
 tools\build.ps1 -Install    # 同上，並複製到遊戲的 Mods\ 測試
-gh release create v2.1.0 dist\seacucu.zh-tw.zip --notes "更新說明"   # 發佈，並自動上傳到工作坊
+gh release create v1.3.0 dist\seacucu.zh-tw.zip --notes "更新說明"   # 發佈，並自動上傳到工作坊
 ```
 
 - 遊戲不在預設位置時，加上 `-GameDir <遊戲資料夾>`。
