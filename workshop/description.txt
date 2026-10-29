@@ -16,7 +16,7 @@ An unofficial fan translation into Traditional Chinese as used in Taiwan. Based 
 [h2]How to use[/h2]
 [list]
 [*]Subscribe and start the game.
-[*]Enable "Traditional Chinese (Taiwan)" on the Mods screen of the main menu, then restart the game.
+[*]Enable “” on the Mods screen of the main menu, then restart the game.
 [*]Pick 正體中文 (at the bottom) in the language menu at the top right of the main menu.
 [/list]
 [b]Start a new save.[/b] The game stores some text (item names, bills, customers, news) in the save when it is created, so an existing save played in Simplified Chinese keeps that text in Simplified Chinese; only newly created content appears in Traditional Chinese.

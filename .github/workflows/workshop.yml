@@ -64,7 +64,11 @@ jobs:
           [ -n "$NOTES" ] || export NOTES="$(gh release view "$TAG" --json body -q .body)"
           python3 - <<'EOF'
           import os, pathlib
-          def q(s): return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+          # SteamCMD's VDF reader ends a value at any double quote, escaped or not.
+          def q(s):
+              if '"' in s:
+                  raise SystemExit("workshop text must not contain ASCII double quotes: " + s[:60])
+              return '"' + s + '"'
           w = pathlib.Path("workshop")
           tag = os.environ["TAG"]
           notes = os.environ.get("NOTES", "").strip()
