@@ -5,9 +5,11 @@
 [list]
 [*]訂閱本模組，啟動遊戲。
 [*]在主選單的「Mods」畫面啟用「Traditional Chinese (Taiwan)」，再重新啟動遊戲。
-[*]在主選單右上角的語言選單選「正體中文」（列在最後）。
+[*]在主選單右上角的語言選單選「正體中文」（列在最後）。原本的 Simplified Chinese 仍是遊戲原版簡體中文。
 [/list]
 啟用本模組時，請停用其他中文翻譯模組，以免互相干擾。
+
+[b]請開新檔遊玩。[/b]遊戲會把物品名稱、帳單、客人、新聞等文字在產生當下存進存檔，所以用簡體中文玩過的舊存檔，這些既有內容仍會是簡體；之後新產生的內容才會是正體。
 
 [h2]內容[/h2]
 [list]
@@ -17,11 +19,11 @@
 [/list]
 
 [h2]目前進度[/h2]
-試玩版的 5,289 條譯文已逐條潤飾；正式版新增或修改的約 1,400 條目前為自動繁化稿，會陸續潤飾。歡迎回報不順或錯誤的譯文。
+全部 6,681 條譯文皆已逐條潤飾。歡迎回報不順或錯誤的譯文。
 
 [h2]授權[/h2]
 程式碼 MIT；字型皆為 SIL Open Font License 1.1。遊戲文字與素材的權利屬於 Questing Goose Studio。
 原始碼與問題回報：[url=https://github.com/seacucu/probably-stolen-zhtw]github.com/seacucu/probably-stolen-zhtw[/url]
 
 [hr][/hr]
-Unofficial Traditional Chinese (Taiwan) translation. Enable it on the Mods screen, restart, then pick 正體中文 in the language menu. Disable other Chinese translation mods while using it.
+Unofficial Traditional Chinese (Taiwan) translation. Enable it on the Mods screen, restart, then pick 正體中文 in the language menu. Disable other Chinese translation mods while using it. Start a new save: text the game stored in an existing save (item names, bills, customers, news) stays as it was written.
