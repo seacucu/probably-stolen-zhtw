@@ -4,7 +4,7 @@
   <Name>Traditional Chinese (Taiwan)</Name>
   <Author>seacucu</Author>
   <ModVersion>2.0.0</ModVersion>
-  <Description>Unofficial Traditional Chinese (Taiwan) translation. Replaces the game's Simplified Chinese text with a Taiwan-usage rewrite and uses Traditional Chinese fonts. After enabling it and restarting, pick the Chinese entry (shown as 繁體中文) in the language menu at the top right of the main menu. Game files and saves are not modified.</Description>
+  <Description>Unofficial Traditional Chinese (Taiwan) translation. Replaces the game's Simplified Chinese text with a Taiwan-usage rewrite and uses Traditional Chinese fonts. After enabling it and restarting, pick the Chinese entry (shown as 正體中文) in the language menu at the top right of the main menu. Game files and saves are not modified.</Description>
   <GameVersions>
     <Version>0.46</Version>
   </GameVersions>

@@ -35,7 +35,7 @@ namespace ProbablyStolenZhTW
     internal static class LanguageMenu
     {
         private const string Original = "Simplified Chinese";
-        private const string Label = "繁體中文";
+        private const string Label = "正體中文";
 
         internal static void Rename(MainMenuUIController menu)
         {
