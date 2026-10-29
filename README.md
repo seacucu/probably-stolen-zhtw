@@ -1,73 +1,89 @@
 # Probably Stolen 繁體中文（台灣）模組
 
-為《Probably Stolen》試玩版（Steam：Probably Stolen Demo）製作的繁體中文化補丁。
-以官方簡體中文為底本，依台灣用語與語感改寫全部 5,596 條字串，並把中文字型換成繁中字型。
+《Probably Stolen》正式版的繁體中文化模組，使用遊戲官方的模組系統，可從 Steam 工作坊訂閱。
+以官方簡體中文為底本，依台灣用語與語感改寫遊戲文字，並把中文字型換成繁中字型。
 
-- 安裝後，簡體中文選項會改為「繁體中文」，原本的簡體中文會被取代。
-- 補丁只在你自己的電腦上修改遊戲檔，散布的內容只有譯文、字型和本程式，不含任何遊戲原始檔。
-- 安裝前會自動備份原檔，可以隨時一鍵還原。
+- 選單上的簡體中文選項會改為「繁體中文」，選了就顯示本模組的譯文。
+- 不修改任何遊戲檔與存檔，停用模組就回到原版。
+- 試玩版用的安裝程式在 [`demo` 分支](../../tree/demo)與 [v1.1.0](../../releases/tag/v1.1.0)，正式版請用本模組。
 
 ![遊戲內的導師筆記與物品說明](docs/screenshot-notebook.png)
 
-<sub>1.0 版畫面。1.1 版起內文改用源樣黑體，行距也已對齊筆記本格線。</sub>
+<sub>試玩版 1.0 版畫面。現在內文改用源樣黑體，行距也已對齊筆記本格線。</sub>
 
 ## 安裝
 
-1. 到 [Releases](../../releases) 下載 `ProbablyStolen-zhTW-Patcher.exe`。
-2. 關閉遊戲，執行補丁程式。程式會自動從 Steam 收藏庫找到遊戲資料夾；找不到時請按「瀏覽…」手動指定（含 `Probably Stolen.exe` 的資料夾）。
-3. 按「安裝／重新安裝」，約需 20 秒到 1 分半。
-4. 啟動遊戲，在主選單右上角的語言選單選「繁體中文」。
+### Steam 工作坊（建議）
 
-遊戲裝在 `C:\Program Files (x86)` 底下時，若出現權限錯誤，請對補丁程式按右鍵，選「以系統管理員身分執行」。
+1. 在工作坊訂閱本模組，啟動遊戲。
+2. 在主選單的「Mods」畫面啟用「Traditional Chinese (Taiwan)」，再重新啟動遊戲。
+3. 在主選單右上角的語言選單選「繁體中文」。
 
-### 還原
+### 手動安裝
 
-- 執行補丁程式，按「還原原版」；或
-- Steam →「Probably Stolen Demo」→ 內容 → 已安裝檔案 →「驗證遊戲檔案的完整性」。
+1. 到 [Releases](../../releases) 下載 `seacucu.zh-tw.zip`。
+2. 關閉遊戲，把壓縮檔裡的 `seacucu.zh-tw` 資料夾解壓縮到遊戲資料夾的 `Mods` 底下（變成 `Mods\seacucu.zh-tw\manifest.xml`）。
+   遊戲資料夾：Steam 遊戲庫 → 在遊戲上按右鍵 → 管理 → 瀏覽本機檔案。
+3. 照上面的第 2、3 步啟用並選擇語言。
 
-### 遊戲更新後
+更新時先刪掉舊的 `Mods\seacucu.zh-tw` 資料夾再解壓縮。
 
-Steam 更新遊戲時可能會覆蓋模組，重新執行補丁程式即可。
-如果更新改動了相關檔案，補丁程式會提示「遊戲版本不同」；可勾選「強制安裝」嘗試，失敗時程式不會寫入任何檔案。
+### 注意
 
-## 補丁修改的檔案
+- 請停用其他中文翻譯模組，同時啟用會互相干擾。
+- 遊戲更新後，原文有變動的句子會先顯示遊戲原本的簡體中文，等本模組更新後再換成譯文，不會顯示過時的內容。
 
-| 檔案（`Probably Stolen_Data\` 底下） | 修改內容 |
-|---|---|
-| `StreamingAssets\aa\StandaloneWindows64\localization-string-tables-chinese(simplified)(zh)_assets_all.bundle` | 簡中字串表的文字換成繁中譯文 |
-| `StreamingAssets\aa\catalog.json` | 停用上述字串表的 CRC 檢查，讓修改後的檔案能載入 |
-| `sharedassets0.assets` | 三套中文字型換成繁中字型；西文字型加掛中文備援字型 |
-| `level0` | 語言選單的「Simplified Chinese」改為「繁體中文」 |
+## 譯文進度
 
-原檔備份在遊戲資料夾的 `zhTW_backup\`。
+| 來源 | 條數 | 狀態 |
+|---|---|---|
+| 試玩版譯文（原文未變） | 5,289 | 已逐條潤飾 |
+| 正式版新增或修改 | 1,392 | 自動繁化稿（OpenCC），待潤飾 |
+
+歡迎在 [Issues](../../issues) 回報不順或錯誤的譯文。
 
 ## 字型
 
 | 用途 | 原字型 | 替換為 |
 |---|---|---|
-| 內文 | Noto Sans SC | [源樣黑體 GenYo Gothic 2 TW](https://github.com/ButTaiwan/genyog-font)（ButTaiwan） |
+| 內文 | Noto Sans SC | [源樣黑體 GenYo Gothic 2 TW](https://github.com/ButTaiwan/genyog-font) Light（ButTaiwan），字距 +0.05 em，行距沿用西文 Noto Sans |
 | 標題 | WDXL Lubrifont SC | [WDXL Lubrifont TC](https://fonts.google.com/specimen/WDXL+Lubrifont+TC) |
 | 手寫 | Ma Shan Zheng | [霞鶩文楷 TC](https://github.com/lxgw/LxgwWenkaiTC) |
 
-三套字型皆以 SIL Open Font License 1.1 授權，授權全文見 `data/fonts/OFL-*.txt`。
+三套字型皆以 SIL Open Font License 1.1 授權，授權全文見 `mod/fonts/OFL-*.txt`。
 
-## 從原始碼執行與建置
+## 運作方式
 
-需要 Python 3.11 以上。
+模組（`src/`）透過 Harmony 掛在遊戲的三個地方：
+
+| 位置 | 作用 |
+|---|---|
+| `LocalizedStringDatabase.GenerateLocalizedString` | 遊戲第一次用到某張簡中字串表時，把表內條目換成譯文。每條譯文附有簡中原文的雜湊，原文對不上就保留原文 |
+| `FontLoader.GetFontByRole` | 簡中語系下，把簡中字型資產換成用模組字型檔即時建立的繁中字型資產 |
+| `MainMenuUIController.HandleLocaleDropdown` | 語言選單的「Simplified Chinese」改為「繁體中文」 |
+
+模組不需要任何額外權限（遊戲的模組掃描不會偵測到檔案、網路等能力），檔案一律透過 `ModHelper` 讀取。
+
+## 建置與上架
+
+需要 .NET SDK（6 以上）與已安裝的遊戲（編譯時參照遊戲的 `Managed` 組件，不會一起打包）。
 
 ```
-pip install -r requirements.txt
-python -m zhtw_patcher            # 圖形介面
-python -m zhtw_patcher status     # 指令列：status / install / restore，可加 --game <資料夾> --force
-build.bat                         # 用 PyInstaller 打包成 dist\ProbablyStolen-zhTW-Patcher.exe
+tools\build.ps1             # 編譯並組出 dist\seacucu.zh-tw\
+tools\build.ps1 -Install    # 同上，並複製到遊戲的 Mods\ 測試
+tools\upload.ps1 -User <Steam 帳號> -ChangeNote "更新說明"   # 用 SteamCMD 上傳到工作坊
 ```
 
-`data/typetrees.json` 是 TextMeshPro 字型資產與下拉選單的結構定義，由 `dev/export_typetrees.py` 從 Cpp2IL 產生的 dummy DLL 匯出；玩家端不需要反編譯任何東西。
+- 遊戲不在預設位置時，加上 `-GameDir <遊戲資料夾>`。
+- `upload.ps1` 需要 [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD)（預設 `C:\steamcmd\steamcmd.exe`，可用 `-SteamCmd` 指定），密碼與 Steam Guard 由 SteamCMD 自己詢問。
+  第一次上傳會建立私人項目，並把項目 ID 存到 `workshop/publishedfileid.txt`（請 commit）；之後的上傳會更新同一個項目。
+  工作坊頁面的標題、說明與預覽圖分別取自 `workshop/title.txt`、`description.txt`、`preview.png`，每次上傳都會覆寫。
+- 譯文 `mod/data/strings.json` 由另外的譯文流程產生（內含開發商原文，不放在本 repo）。
 
 ## 授權
 
 - 程式碼：MIT License（見 `LICENSE`）
 - 字型：SIL Open Font License 1.1
-- 譯文（`data/strings.json`）：改寫自遊戲官方文本，遊戲內容版權屬 Questing Goose Studio／tinyBuild 所有。
+- 譯文（`mod/data/strings.json`）：改寫自遊戲官方文本，遊戲內容版權屬 Questing Goose Studio 所有。
 
 本專案為非官方玩家自製模組，與開發商、發行商無關。

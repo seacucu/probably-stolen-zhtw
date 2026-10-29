@@ -1,0 +1,27 @@
+[h1]Probably Stolen 繁體中文（台灣）[/h1]
+非官方玩家自製模組。以官方簡體中文為底本，依台灣用語與語感改寫遊戲文字，並換成繁體中文字型。
+
+[h2]使用方式[/h2]
+[list]
+[*]訂閱本模組，啟動遊戲。
+[*]在主選單的「Mods」畫面啟用「Traditional Chinese (Taiwan)」，再重新啟動遊戲。
+[*]在主選單右上角的語言選單選「繁體中文」（原本的 Simplified Chinese 選項）。
+[/list]
+啟用本模組時，請停用其他中文翻譯模組，以免互相干擾。
+
+[h2]內容[/h2]
+[list]
+[*]字串表文字改寫為台灣繁體中文，不修改任何遊戲檔與存檔；停用模組即回到原版。
+[*]字型：內文［源樣黑體 GenYo Gothic 2 TW（Light）］、標題［WDXL Lubrifont TC］、手寫［霞鶩文楷 TC］，行距對齊筆記本格線。
+[*]遊戲更新而原文變動的句子，會先顯示遊戲原本的文字，等本模組更新後再換成譯文，不會顯示過時的內容。
+[/list]
+
+[h2]目前進度[/h2]
+試玩版的 5,289 條譯文已逐條潤飾；正式版新增或修改的約 1,400 條目前為自動繁化稿，會陸續潤飾。歡迎回報不順或錯誤的譯文。
+
+[h2]授權[/h2]
+程式碼 MIT；字型皆為 SIL Open Font License 1.1。遊戲文字與素材的權利屬於 Questing Goose Studio。
+原始碼與問題回報：[url=https://github.com/seacucu/probably-stolen-zhtw]github.com/seacucu/probably-stolen-zhtw[/url]
+
+[hr][/hr]
+Unofficial Traditional Chinese (Taiwan) translation. Enable it on the Mods screen, restart, then pick 繁體中文 in the language menu. Disable other Chinese translation mods while using it.
