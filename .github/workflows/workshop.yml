@@ -47,8 +47,9 @@ jobs:
         env:
           STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
         run: |
-          mkdir -p ~/steamcmd/config
-          echo "$STEAM_CONFIG_VDF" | base64 -d > ~/steamcmd/config/config.vdf
+          # SteamCMD on Linux keeps its login state under ~/Steam, not next to steamcmd.sh.
+          mkdir -p ~/Steam/config
+          echo "$STEAM_CONFIG_VDF" | base64 -d > ~/Steam/config/config.vdf
 
       - name: Write Workshop item VDF
         env:
