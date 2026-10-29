@@ -89,6 +89,7 @@ gh release create v1.3.0 dist\seacucu.zh-tw.zip --notes "更新說明"   # 發�
   Release 說明會成為工作坊的更新說明。工作坊頁面的標題、說明與預覽圖取自 main 分支的 `workshop/title.txt`、`description.txt`、`preview.png`，每次上傳都會覆寫。
   SteamCMD 只能寫入英文區；繁體中文區的標題與說明（`workshop/zh-TW/`）要在工作坊頁面切換到該語言後手動貼上。
   正式版（非預先發行）會順便把項目設為公開。
+- SteamCMD 也不能設定工作坊標籤。要改標籤時，用項目擁有者的帳號登入 Steam 用戶端，再執行 `dotnet run --project tools\WorkshopTags -- Mod Translation`。
   要重傳某個版本，可在 Actions 頁面手動執行「Workshop upload」並填入標籤。
 - 上傳需要兩個 repo secrets：`STEAM_USERNAME`，以及 `STEAM_CONFIG_VDF`（在自己電腦用 [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD) 登入成功後，`config/config.vdf` 的 base64）。
   其中存的是登入權杖，不含密碼；權杖失效、上傳顯示登入失敗時，重新登入 SteamCMD 再更新這個 secret。
