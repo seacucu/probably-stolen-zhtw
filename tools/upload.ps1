@@ -1,4 +1,4 @@
-# Uploads dist\<mod id>\ to the Steam Workshop with SteamCMD (run tools\build.ps1 first).
+﻿# Uploads dist\<mod id>\ to the Steam Workshop with SteamCMD (run tools\build.ps1 first).
 #
 #   tools\upload.ps1 -User <steam account> [-ChangeNote "..."] [-SteamCmd C:\steamcmd\steamcmd.exe]
 #

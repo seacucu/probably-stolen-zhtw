@@ -1,4 +1,4 @@
-# Probably Stolen 正體中文（台灣）模組
+﻿# Probably Stolen 正體中文（台灣）模組
 
 《Probably Stolen》正式版的正體中文化模組，使用遊戲官方的模組系統，可從 Steam 工作坊訂閱。
 以官方簡體中文為底本，依台灣用語與語感改寫遊戲文字，並把中文字型換成繁中字型。
@@ -15,7 +15,7 @@
 
 ### Steam 工作坊（建議）
 
-1. 在工作坊訂閱本模組，啟動遊戲。
+1. 在[工作坊](https://steamcommunity.com/sharedfiles/filedetails/?id=3829248318)訂閱本模組，啟動遊戲。
 2. 在主選單的「Mods」畫面啟用「Traditional Chinese (Taiwan)」，再重新啟動遊戲。
 3. 在主選單右上角的語言選單選「正體中文」。
 
