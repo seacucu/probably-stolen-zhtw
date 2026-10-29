@@ -34,6 +34,9 @@ namespace ProbablyStolenZhTW
 
         private static readonly Dictionary<string, TMP_FontAsset> Built = new Dictionary<string, TMP_FontAsset>();
 
+        // Built asset -> the game asset it replaces, for switching back to Simplified Chinese.
+        private static readonly Dictionary<TMP_FontAsset, TMP_FontAsset> Originals = new Dictionary<TMP_FontAsset, TMP_FontAsset>();
+
         private static string _folder;
 
         internal static void Load()
@@ -69,7 +72,11 @@ namespace ProbablyStolenZhTW
             }
             Built[original.name] = built;
             if (built != null)
-                ReplaceInFallbacks(original, built);
+            {
+                Originals[built] = original;
+                if (Variant.Traditional)
+                    ReplaceInFallbacks(original, built);
+            }
             return built;
         }
 
@@ -120,28 +127,46 @@ namespace ProbablyStolenZhTW
             JsonUtility.FromJsonOverwrite("{\"m_FaceInfo\":" + JsonUtility.ToJson(face) + "}", asset);
         }
 
-        private static void ReplaceInFallbacks(TMP_FontAsset original, TMP_FontAsset built)
+        private static void ReplaceInFallbacks(TMP_FontAsset from, TMP_FontAsset to)
         {
             foreach (var asset in Resources.FindObjectsOfTypeAll<TMP_FontAsset>())
             {
                 var table = asset.fallbackFontAssetTable;
-                int i = table?.IndexOf(original) ?? -1;
+                int i = table?.IndexOf(from) ?? -1;
                 if (i >= 0)
-                    table[i] = built;
+                    table[i] = to;
             }
-            int g = TMP_Settings.fallbackFontAssets?.IndexOf(original) ?? -1;
+            int g = TMP_Settings.fallbackFontAssets?.IndexOf(from) ?? -1;
             if (g >= 0)
-                TMP_Settings.fallbackFontAssets[g] = built;
+                TMP_Settings.fallbackFontAssets[g] = to;
         }
 
-        // Texts that were given a Simplified Chinese font before the mod loaded, or that set it in the scene.
+        // Switches fallbacks and shown texts between the built fonts and the game's.
+        internal static void Show(bool traditional)
+        {
+            foreach (var pair in Originals)
+            {
+                if (traditional)
+                    ReplaceInFallbacks(pair.Value, pair.Key);
+                else
+                    ReplaceInFallbacks(pair.Key, pair.Value);
+            }
+            SwapTexts();
+        }
+
+        // Texts that were given the other variant's font before the mod loaded or the variant changed,
+        // or that set it in the scene.
         internal static void SwapTexts()
         {
             if (!ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code))
                 return;
             foreach (var text in Resources.FindObjectsOfTypeAll<TMP_Text>())
             {
-                var replacement = Replacement(text.font);
+                TMP_FontAsset replacement = null;
+                if (Variant.Traditional)
+                    replacement = Replacement(text.font);
+                else if (text.font != null)
+                    Originals.TryGetValue(text.font, out replacement);
                 if (replacement != null)
                     text.font = replacement;
                 else if (text.isActiveAndEnabled)

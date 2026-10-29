@@ -14,8 +14,16 @@ namespace ProbablyStolenZhTW
         // Table collection -> key -> [FNV-1a hash of the zh-CN source, zh-TW text].
         private static Dictionary<string, Dictionary<string, string[]>> _tables;
 
-        // Instance IDs of the table objects already patched; a reloaded table is a new object.
-        private static readonly HashSet<int> Patched = new HashSet<int>();
+        private struct Swap
+        {
+            public StringTableEntry Entry;
+            public string Source;
+            public string Text;
+        }
+
+        // Table objects already patched (a reloaded table is a new object) -> their translated entries,
+        // kept with both texts so the language menu can switch between them.
+        private static readonly Dictionary<StringTable, List<Swap>> Patched = new Dictionary<StringTable, List<Swap>>();
 
         internal static void Load()
         {
@@ -34,8 +42,10 @@ namespace ProbablyStolenZhTW
         {
             if (_tables == null || table == null || !ZhTwMod.IsChinese(table.LocaleIdentifier.Code))
                 return;
-            if (!Patched.Add(table.GetInstanceID()))
+            if (Patched.ContainsKey(table))
                 return;
+            var swaps = new List<Swap>();
+            Patched[table] = swaps;
             if (!_tables.TryGetValue(table.TableCollectionName, out var rows))
                 return;
             int applied = 0, changed = 0;
@@ -47,7 +57,9 @@ namespace ProbablyStolenZhTW
                 // translation is updated, rather than showing an outdated line.
                 if (Hash(entry.Value) == row[0])
                 {
-                    entry.Value = row[1];
+                    swaps.Add(new Swap { Entry = entry, Source = entry.Value, Text = row[1] });
+                    if (Variant.Traditional)
+                        entry.Value = row[1];
                     applied++;
                 }
                 else
@@ -56,6 +68,31 @@ namespace ProbablyStolenZhTW
                 }
             }
             ZhTwMod.Log.Log($"字串表 {table.TableCollectionName}：套用 {applied} 條" + (changed > 0 ? $"，原文已變動而略過 {changed} 條" : ""));
+        }
+
+        // Switches every patched entry between the translation and the game's text.
+        internal static void Show(bool traditional)
+        {
+            var unloaded = new List<StringTable>();
+            foreach (var pair in Patched)
+            {
+                if (pair.Key == null)
+                {
+                    unloaded.Add(pair.Key);
+                    continue;
+                }
+                foreach (var swap in pair.Value)
+                    swap.Entry.Value = traditional ? swap.Text : swap.Source;
+            }
+            foreach (var table in unloaded)
+                Patched.Remove(table);
+            RefreshShownText();
+            // What the game itself redraws on a language change (the locale stays zh, so it does not).
+            foreach (var d in Resources.FindObjectsOfTypeAll<DropdownLocalizer>())
+            {
+                if (d.isActiveAndEnabled)
+                    d.UpdateOptions();
+            }
         }
 
         internal static void RefreshShownText()

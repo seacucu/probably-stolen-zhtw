@@ -15,6 +15,7 @@ namespace ProbablyStolenZhTW
         public void Init(ModManifest manifest)
         {
             Log = new ModLog(manifest);
+            Variant.Load();
             var host = new GameObject("ZhTW");
             UnityEngine.Object.DontDestroyOnLoad(host);
             host.AddComponent<Runner>();
@@ -29,6 +30,32 @@ namespace ProbablyStolenZhTW
         }
 
         internal static bool IsChinese(string localeCode) => localeCode != null && localeCode.StartsWith("zh", StringComparison.Ordinal);
+    }
+
+    // Whether the zh locale shows the mod's Traditional Chinese or the game's own Simplified Chinese.
+    // Picked in the language menu and saved with the game's settings, like its own locale choice.
+    internal static class Variant
+    {
+        private const string SaveKey = "seacucu.zh-tw.traditional";
+
+        internal static bool Traditional { get; private set; } = true;
+
+        internal static void Load()
+        {
+            if (ES3.KeyExists(SaveKey))
+                Traditional = ES3.Load<bool>(SaveKey);
+        }
+
+        internal static void Set(bool traditional)
+        {
+            if (traditional == Traditional)
+                return;
+            Traditional = traditional;
+            ES3.Save(SaveKey, traditional);
+            Strings.Show(traditional);
+            Fonts.Show(traditional);
+            ZhTwMod.Log.Log(traditional ? "改用正體中文" : "改用遊戲原本的簡體中文");
+        }
     }
 
     // The mod folder is only known to ModHelper after Init returns, so data loads on the first frame.

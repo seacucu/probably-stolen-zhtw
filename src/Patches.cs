@@ -20,7 +20,7 @@ namespace ProbablyStolenZhTW
     {
         private static void Postfix(Locale locale, ref TMP_FontAsset __result)
         {
-            if (locale != null && ZhTwMod.IsChinese(locale.Identifier.Code))
+            if (Variant.Traditional && locale != null && ZhTwMod.IsChinese(locale.Identifier.Code))
                 __result = Fonts.Replacement(__result) ?? __result;
         }
     }
@@ -34,11 +34,11 @@ namespace ProbablyStolenZhTW
     [HarmonyPatch(typeof(MainMenuUIController), nameof(MainMenuUIController.OnLocaleChanged))]
     internal static class OnLocaleChangedPatch
     {
-        private static void Prefix(ref int localeIndex) => LanguageMenu.Redirect(ref localeIndex);
+        private static void Prefix(ref int localeIndex) => LanguageMenu.Select(ref localeIndex);
     }
 
-    // Adds a Traditional Chinese option after the game's languages. It uses the game's zh locale, which
-    // the mod translates, so it is shown as the selected language whenever zh is.
+    // Adds a Traditional Chinese option after the game's languages. Both Chinese options use the game's
+    // zh locale; which one is picked decides whether it shows the mod's text or the game's own.
     internal static class LanguageMenu
     {
         private const string Chinese = "Simplified Chinese";
@@ -61,16 +61,25 @@ namespace ProbablyStolenZhTW
                 _added = options.Count;
                 options.Add(new TMP_Dropdown.OptionData(Label));
             }
-            if (dropdown.value == _chinese)
+            if (dropdown.value == _chinese && Variant.Traditional)
                 dropdown.SetValueWithoutNotify(_added);
             dropdown.RefreshShownValue();
         }
 
         // The game ignores indices past its own list, so the added option selects the zh locale.
-        internal static void Redirect(ref int index)
+        internal static void Select(ref int index)
         {
-            if (_added >= 0 && index == _added)
+            if (_chinese < 0)
+                return;
+            if (index == _added)
+            {
+                Variant.Set(true);
                 index = _chinese;
+            }
+            else if (index == _chinese)
+            {
+                Variant.Set(false);
+            }
         }
     }
 }

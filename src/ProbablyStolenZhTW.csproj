@@ -20,6 +20,7 @@
   <!-- Compiled against the game's own assemblies; none of them is copied next to the mod. -->
   <ItemGroup>
     <Reference Include="Assembly-CSharp" HintPath="$(Managed)\Assembly-CSharp.dll" Private="false" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(Managed)\Assembly-CSharp-firstpass.dll" Private="false" />
     <Reference Include="0Harmony" HintPath="$(Managed)\0Harmony.dll" Private="false" />
     <Reference Include="Newtonsoft.Json" HintPath="$(Managed)\Newtonsoft.Json.dll" Private="false" />
     <Reference Include="Unity.Localization" HintPath="$(Managed)\Unity.Localization.dll" Private="false" />

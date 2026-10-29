@@ -3,7 +3,7 @@
 《Probably Stolen》正式版的正體中文化模組，使用遊戲官方的模組系統，可從 Steam 工作坊訂閱。
 以官方簡體中文為底本，依台灣用語與語感改寫遊戲文字，並把中文字型換成繁中字型。
 
-- 語言選單會多出「正體中文」選項，選了就顯示本模組的譯文。
+- 語言選單會多出「正體中文」選項，選了就顯示本模組的譯文；原本的「Simplified Chinese」仍是遊戲原版的簡體中文。
 - 不修改任何遊戲檔與存檔，停用模組就回到原版。
 - 試玩版用的安裝程式在 [`demo` 分支](../../tree/demo)與 [v1.1.0](../../releases/tag/v1.1.0)，正式版請用本模組。
 
@@ -58,9 +58,9 @@
 
 | 位置 | 作用 |
 |---|---|
-| `LocalizedStringDatabase.GenerateLocalizedString` | 遊戲第一次用到某張簡中字串表時，把表內條目換成譯文。每條譯文附有簡中原文的雜湊，原文對不上就保留原文 |
-| `FontLoader.GetFontByRole` | 簡中語系下，把簡中字型資產換成用模組字型檔即時建立的繁中字型資產 |
-| `MainMenuUIController.HandleLocaleDropdown`、`OnLocaleChanged` | 在語言選單最後加上「正體中文」，選了就切到遊戲的中文語系（`zh`） |
+| `LocalizedStringDatabase.GenerateLocalizedString` | 遊戲第一次用到某張簡中字串表時，把表內條目換成譯文（同時記下原文，切回簡體中文時換回去）。每條譯文附有簡中原文的雜湊，原文對不上就保留原文 |
+| `FontLoader.GetFontByRole` | 選正體中文時，把簡中字型資產換成用模組字型檔即時建立的繁中字型資產 |
+| `MainMenuUIController.HandleLocaleDropdown`、`OnLocaleChanged` | 在語言選單最後加上「正體中文」。兩個中文選項都用遊戲的中文語系（`zh`），選哪一個決定顯示譯文或原版簡中，並存進遊戲設定 |
 
 模組不需要任何額外權限（遊戲的模組掃描不會偵測到檔案、網路等能力），檔案一律透過 `ModHelper` 讀取。
 
