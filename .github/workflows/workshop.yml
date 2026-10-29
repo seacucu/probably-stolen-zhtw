@@ -1,0 +1,82 @@
+# Publishing a GitHub release uploads its seacucu.zh-tw.zip to the Steam Workshop item in
+# workshop/publishedfileid.txt, with the title, description and preview from workshop/ at that tag.
+#
+# Secrets: STEAM_USERNAME, and STEAM_CONFIG_VDF = base64 of SteamCMD's config/config.vdf after a
+# successful login on your own machine (it holds the login token, so no password or Steam Guard code
+# is needed here). Renew it when the upload step reports a login failure.
+name: Workshop upload
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to upload again
+        required: true
+
+concurrency: workshop
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Fetch release zip
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$TAG" -p seacucu.zh-tw.zip -D dist
+          unzip -q dist/seacucu.zh-tw.zip -d dist
+          test -f dist/seacucu.zh-tw/manifest.xml
+
+      - name: Install SteamCMD
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lib32gcc-s1
+          mkdir -p ~/steamcmd
+          curl -sSL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zx -C ~/steamcmd
+
+      - name: Restore Steam login
+        env:
+          STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
+        run: |
+          mkdir -p ~/steamcmd/config
+          echo "$STEAM_CONFIG_VDF" | base64 -d > ~/steamcmd/config/config.vdf
+
+      - name: Write Workshop item VDF
+        env:
+          NOTES: ${{ github.event.release.body }}
+        run: |
+          python3 - <<'EOF'
+          import os, pathlib
+          def q(s): return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+          w = pathlib.Path("workshop")
+          tag = os.environ["TAG"]
+          notes = os.environ.get("NOTES", "").strip()
+          fields = {
+              "appid": "4348910",
+              "publishedfileid": (w / "publishedfileid.txt").read_text().strip(),
+              "contentfolder": str(pathlib.Path("dist/seacucu.zh-tw").resolve()),
+              "previewfile": str((w / "preview.png").resolve()),
+              "title": (w / "title.txt").read_text(encoding="utf-8").strip(),
+              "description": (w / "description.txt").read_text(encoding="utf-8").strip(),
+              "changenote": f"{tag}\n{notes}" if notes else tag,
+          }
+          body = "\n".join(f"\t{q(k)} {q(v)}" for k, v in fields.items())
+          pathlib.Path("workshop_item.vdf").write_text('"workshopitem"\n{\n' + body + "\n}\n", encoding="utf-8")
+          EOF
+
+      - name: Upload
+        env:
+          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+        run: |
+          ~/steamcmd/steamcmd.sh +login "$STEAM_USERNAME" +workshop_build_item "$PWD/workshop_item.vdf" +quit | tee steamcmd.log || true
+          grep -q "Success\." steamcmd.log
+          echo "https://steamcommunity.com/sharedfiles/filedetails/?id=$(cat workshop/publishedfileid.txt)" >> "$GITHUB_STEP_SUMMARY"

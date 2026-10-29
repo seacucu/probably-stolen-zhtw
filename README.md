@@ -37,8 +37,8 @@
 
 | 來源 | 條數 | 狀態 |
 |---|---|---|
-| 試玩版譯文（原文未變） | 5,289 | 已逐條潤飾 |
-| 正式版新增或修改 | 1,392 | 自動繁化稿（OpenCC），待潤飾 |
+| 試玩版譯文（原文未變） | 5,288 | 已逐條潤飾 |
+| 正式版新增或修改 | 1,393 | 已逐條潤飾 |
 
 歡迎在 [Issues](../../issues) 回報不順或錯誤的譯文。
 
@@ -69,15 +69,17 @@
 需要 .NET SDK（6 以上）與已安裝的遊戲（編譯時參照遊戲的 `Managed` 組件，不會一起打包）。
 
 ```
-tools\build.ps1             # 編譯並組出 dist\seacucu.zh-tw\
+tools\build.ps1             # 編譯並組出 dist\seacucu.zh-tw\ 與 dist\seacucu.zh-tw.zip
 tools\build.ps1 -Install    # 同上，並複製到遊戲的 Mods\ 測試
-tools\upload.ps1 -User <Steam 帳號> -ChangeNote "更新說明"   # 用 SteamCMD 上傳到工作坊
+gh release create v2.1.0 dist\seacucu.zh-tw.zip --notes "更新說明"   # 發佈，並自動上傳到工作坊
 ```
 
 - 遊戲不在預設位置時，加上 `-GameDir <遊戲資料夾>`。
-- `upload.ps1` 需要 [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD)（預設 `C:\steamcmd\steamcmd.exe`，可用 `-SteamCmd` 指定），密碼與 Steam Guard 由 SteamCMD 自己詢問。
-  第一次上傳會建立私人項目，並把項目 ID 存到 `workshop/publishedfileid.txt`（請 commit）；之後的上傳會更新同一個項目。
-  工作坊頁面的標題、說明與預覽圖分別取自 `workshop/title.txt`、`description.txt`、`preview.png`，每次上傳都會覆寫。
+- 發佈 GitHub Release 時，`.github/workflows/workshop.yml` 會把附檔 `seacucu.zh-tw.zip` 上傳到 `workshop/publishedfileid.txt` 指定的工作坊項目，
+  Release 說明會成為工作坊的更新說明。工作坊頁面的標題、說明與預覽圖取自該版本的 `workshop/title.txt`、`description.txt`、`preview.png`，每次上傳都會覆寫。
+  要重傳某個版本，可在 Actions 頁面手動執行「Workshop upload」並填入標籤。
+- 上傳需要兩個 repo secrets：`STEAM_USERNAME`，以及 `STEAM_CONFIG_VDF`（在自己電腦用 [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD) 登入成功後，`config/config.vdf` 的 base64）。
+  其中存的是登入權杖，不含密碼；權杖失效、上傳顯示登入失敗時，重新登入 SteamCMD 再更新這個 secret。
 - 譯文 `mod/data/strings.json` 由另外的譯文流程產生（內含開發商原文，不放在本 repo）。
 
 ## 授權
