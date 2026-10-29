@@ -1,5 +1,7 @@
 # Publishing a GitHub release uploads its seacucu.zh-tw.zip to the Steam Workshop item in
-# workshop/publishedfileid.txt, with the title, description and preview from workshop/ at that tag.
+# workshop/publishedfileid.txt, with the title, description and preview from workshop/ on the default
+# branch, so the page can change without a new release. SteamCMD only writes the item's English text;
+# the Traditional Chinese text (workshop/zh-TW/) is pasted into that language on the Workshop page.
 #
 # Secrets: STEAM_USERNAME, and STEAM_CONFIG_VDF = base64 of SteamCMD's config/config.vdf after a
 # successful login on your own machine (it holds the login token, so no password or Steam Guard code
@@ -25,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.TAG }}
+          ref: ${{ github.event.repository.default_branch }}
 
       - name: Fetch release zip
         env:
@@ -53,10 +55,13 @@ jobs:
 
       - name: Write Workshop item VDF
         env:
+          GH_TOKEN: ${{ github.token }}
           NOTES: ${{ github.event.release.body }}
           # A full (non-pre) release makes the item public; pre-releases and re-runs keep its visibility.
           PUBLIC: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         run: |
+          # A manual re-run reuses the release's notes as the change note.
+          [ -n "$NOTES" ] || export NOTES="$(gh release view "$TAG" --json body -q .body)"
           python3 - <<'EOF'
           import os, pathlib
           def q(s): return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
