@@ -61,8 +61,19 @@ namespace ProbablyStolenZhTW
                 _added = options.Count;
                 options.Add(new TMP_Dropdown.OptionData(Label));
             }
+            Sync(menu);
+        }
+
+        // Shows the Chinese option that matches the current variant, without selecting it again.
+        internal static void Sync(MainMenuUIController menu)
+        {
+            var dropdown = menu != null ? menu.localeDropdown : null;
+            if (dropdown == null || _chinese < 0)
+                return;
             if (dropdown.value == _chinese && Variant.Traditional)
                 dropdown.SetValueWithoutNotify(_added);
+            else if (dropdown.value == _added && !Variant.Traditional)
+                dropdown.SetValueWithoutNotify(_chinese);
             dropdown.RefreshShownValue();
         }
 

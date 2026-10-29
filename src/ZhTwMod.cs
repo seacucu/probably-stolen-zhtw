@@ -61,7 +61,12 @@ namespace ProbablyStolenZhTW
     // The mod folder is only known to ModHelper after Init returns, so data loads on the first frame.
     internal sealed class Runner : MonoBehaviour
     {
+        // For comparing the two Chinese texts while working on the translation (F8 and F9 are the game's
+        // console and debug panel, F12 is Steam's screenshot key).
+        private const KeyCode SwitchKey = KeyCode.F7;
+
         private bool _refreshed;
+        private bool _switchKey;
 
         private void Start()
         {
@@ -77,17 +82,30 @@ namespace ProbablyStolenZhTW
                 return;
             }
             SceneManager.sceneLoaded += (scene, mode) => Fonts.SwapTexts();
+            // Developer mode is the Mods screen switch for a local copy of the mod.
+            _switchKey = ModTrust.Get(ZhTwMod.ModId)?.developerMode == true;
+            if (_switchKey)
+                ZhTwMod.Log.Log($"開發者模式：按 {SwitchKey} 切換正體／簡體中文");
         }
 
-        // Text shown before the data loaded is still Simplified Chinese: redraw it once localization is up.
         private void Update()
         {
-            if (_refreshed || !LocalizationSettings.InitializationOperation.IsDone)
-                return;
-            _refreshed = true;
-            Strings.RefreshShownText();
-            Fonts.SwapTexts();
-            LanguageMenu.AddOption(MainMenuUIController.Instance);
+            if (!_refreshed)
+            {
+                // Text shown before the data loaded is still Simplified Chinese: redraw it once localization is up.
+                if (!LocalizationSettings.InitializationOperation.IsDone)
+                    return;
+                _refreshed = true;
+                Strings.RefreshShownText();
+                Fonts.SwapTexts();
+                LanguageMenu.AddOption(MainMenuUIController.Instance);
+            }
+            if (_switchKey && Input.GetKeyDown(SwitchKey) && !StoreUIManager.IsTextFieldFocused()
+                && ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code))
+            {
+                Variant.Set(!Variant.Traditional);
+                LanguageMenu.Sync(MainMenuUIController.Instance);
+            }
         }
     }
 }

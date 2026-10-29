@@ -75,6 +75,7 @@ gh release create v1.3.0 dist\seacucu.zh-tw.zip --notes "更新說明"   # 發�
 ```
 
 - 遊戲不在預設位置時，加上 `-GameDir <遊戲資料夾>`。
+- 在 Mods 畫面替本機這份模組開啟開發者模式後，遊戲中按 F7 可在正體與簡體中文之間切換，方便對照與截圖。
 - 發佈 GitHub Release 時，`.github/workflows/workshop.yml` 會把附檔 `seacucu.zh-tw.zip` 上傳到 `workshop/publishedfileid.txt` 指定的工作坊項目，
   Release 說明會成為工作坊的更新說明。工作坊頁面的標題、說明與預覽圖取自該版本的 `workshop/title.txt`、`description.txt`、`preview.png`，每次上傳都會覆寫。
   要重傳某個版本，可在 Actions 頁面手動執行「Workshop upload」並填入標籤。
