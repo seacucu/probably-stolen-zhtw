@@ -1,41 +1,36 @@
-[h1]Probably Stolen – Traditional Chinese (Taiwan)[/h1]
-An unofficial fan translation into Traditional Chinese as used in Taiwan. Based on the official Simplified Chinese text, every line has been rewritten in Taiwanese wording and tone, and the Chinese fonts are replaced with Traditional Chinese ones.
+[h1]Probably Stolen 正體中文精校模組[/h1]
+以官方簡體中文為底本，依台灣用語與語感逐句改寫遊戲文字，並換上正體中文字型。
+[b]v1.4.0 起支援舊存檔：用簡體中文玩過的存檔也能直接繼續玩，不必開新檔。[/b]
 
 [img]https://raw.githubusercontent.com/seacucu/probably-stolen-zhtw/main/docs/main-menu.png[/img]
 
-[h2]Features[/h2]
+[h2]特色[/h2]
 [list]
-[*][b]Fully edited:[/b] all 6,681 strings (UI, items, mechanics, dialogue, phone calls, news) were rewritten one by one, not just converted character by character.
-[*][b]Taiwanese usage:[/b] interface terms, item names and dialogue use the words Taiwanese players know, with each character's voice adjusted to match.
-[*][b]Traditional Chinese fonts:[/b] GenYo Gothic 2 TW for body text, WDXL Lubrifont TC for titles and LXGW WenKai TC for handwriting, with line spacing that keeps notebook text on its ruled lines.
-[*][b]Both scripts available:[/b] adds 正體中文 to the language menu; Simplified Chinese stays the game's original text, and you can switch at any time.
-[*][b]No game files touched:[/b] the mod changes no game files or saves and needs no extra permissions; disable it to go back to the original.
-[*][b]Update-safe:[/b] if a game update changes a line, the game's own text is shown until the mod is updated, so you never see an outdated translation.
+[*][b]全文精校：[/b]6,681 條字串（UI、物品、機制說明、對白、電話、新聞）逐條改寫，不是單純簡轉繁。
+[*][b]台灣用語：[/b]介面、物品名稱與對話都用台灣玩家熟悉的說法，角色口吻也一併調整。
+[*][b]正體字型：[/b]內文［源樣黑體 GenYo Gothic 2 TW］、標題［WDXL Lubrifont TC］、手寫［霞鶩文楷 TC］，行距對齊筆記本格線。
+[*][b]簡繁並存：[/b]語言選單新增「正體中文」，原本的 Simplified Chinese 仍是遊戲原版簡體中文，可隨時切換。
+[*][b]支援舊存檔：[/b]簡體中文時期的存檔可以直接沿用，畫面上一樣顯示正體。
+[*][b]不動遊戲檔：[/b]不修改任何遊戲檔與存檔，停用模組即回到原版；不需要任何額外權限。
+[*][b]跟得上更新：[/b]遊戲更新而原文變動的句子，會先顯示遊戲原本的文字，等本模組更新後再換成譯文，不會顯示過時的內容。
 [/list]
 
-[h2]How to use[/h2]
+[h2]使用方式[/h2]
 [list]
-[*]Subscribe and start the game.
-[*]Enable “Traditional Chinese (Taiwan)” on the Mods screen of the main menu, then restart the game.
-[*]Pick 正體中文 (at the bottom) in the language menu at the top right of the main menu.
+[*]訂閱本模組，啟動遊戲。
+[*]在主選單的「改裝件／Mods」畫面啟用「Traditional Chinese (Taiwan)」，再重新啟動遊戲。
+[*]在主選單右上角的語言選單選「正體中文」（列在最後）。
 [/list]
-[b]Start a new save.[/b] The game stores some text (item names, bills, customers, news) in the save when it is created, so an existing save played in Simplified Chinese keeps that text in Simplified Chinese; only newly created content appears in Traditional Chinese.
-Disable other Chinese translation mods while using this one.
+啟用本模組時，請停用其他中文翻譯模組，以免互相干擾。
 
-[h2]Before and after[/h2]
-[b]Controls overlay[/b] (top: original Simplified Chinese / bottom: this mod)
-[img]https://raw.githubusercontent.com/seacucu/probably-stolen-zhtw/main/docs/compare-controls.png[/img]
+[h2]更新紀錄[/h2]
+[list]
+[*][b]v1.4.0[/b]：支援舊存檔，用簡體中文玩過的存檔也會顯示正體；修正一處用語。
+[*][b]v1.3.0[/b]：全部譯文精校完成；語言選單新增「正體中文」，可與原版簡體中文隨時切換。
+[*][b]v1.2.0[/b]：工作坊第一版。
+[/list]
 
-[b]Mentor's note[/b] (left: this mod / right: original)
-[img]https://raw.githubusercontent.com/seacucu/probably-stolen-zhtw/main/docs/compare-mentor-note.png[/img]
-
-[b]Cigarette authentication manual[/b] (left: original / right: this mod)
-[img]https://raw.githubusercontent.com/seacucu/probably-stolen-zhtw/main/docs/compare-cigarette-manual.png[/img]
-
-[b]Rent reminder[/b] (top: original / bottom: this mod)
-[img]https://raw.githubusercontent.com/seacucu/probably-stolen-zhtw/main/docs/compare-rent.png[/img]
-
-[h2]Feedback and license[/h2]
-Please report awkward or wrong lines in the comments or on GitHub, ideally with a screenshot.
-Code: MIT. Fonts: SIL Open Font License 1.1. Game text and assets belong to Questing Goose Studio.
-Source and issues: [url=https://github.com/seacucu/probably-stolen-zhtw]github.com/seacucu/probably-stolen-zhtw[/url]
+[h2]回報與授權[/h2]
+看到不順或錯誤的譯文，歡迎在留言區或 GitHub 回報，附上截圖更好。
+程式碼 MIT；字型皆為 SIL Open Font License 1.1。遊戲文字與素材的權利屬於 Questing Goose Studio。
+原始碼與問題回報：[url=https://github.com/seacucu/probably-stolen-zhtw]github.com/seacucu/probably-stolen-zhtw[/url]

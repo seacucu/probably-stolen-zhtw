@@ -1,7 +1,7 @@
 # Publishing a GitHub release uploads its seacucu.zh-tw.zip to the Steam Workshop item in
 # workshop/publishedfileid.txt, with the title, description and preview from workshop/ on the default
-# branch, so the page can change without a new release. SteamCMD only writes the item's English text;
-# the Traditional Chinese text (workshop/zh-TW/) is pasted into that language on the Workshop page.
+# branch, so the page can change without a new release. SteamCMD only writes the item's default
+# (English) text; the page's Traditional Chinese version is pasted from the same files by hand.
 #
 # Secrets: STEAM_USERNAME, and STEAM_CONFIG_VDF = base64 of SteamCMD's config/config.vdf after a
 # successful login on your own machine (it holds the login token, so no password or Steam Guard code
