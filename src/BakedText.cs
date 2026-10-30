@@ -120,8 +120,14 @@ namespace ProbablyStolenZhTW
                     Cache.Clear();
                 Cache[value] = result;
             }
+            if (Unmatched.Count < MaxUnmatched && HasSimplified(result, 0, result.Length) && Unmatched.Add(result))
+                ZhTwMod.Log.Log("仍是簡體：" + (result.Length > 120 ? result.Substring(0, 120) + "…" : result).Replace("\n", "⏎"));
             return result;
         }
+
+        // Text still Simplified after matching, logged once each so that missing entries can be found.
+        private const int MaxUnmatched = 50;
+        private static readonly HashSet<string> Unmatched = new HashSet<string>();
 
         private static string FromTemplate(string value)
         {

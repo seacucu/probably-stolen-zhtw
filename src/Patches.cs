@@ -38,6 +38,16 @@ namespace ProbablyStolenZhTW
         private static void Prefix(ref string sourceText) => sourceText = BakedText.Convert(sourceText);
     }
 
+    // Tooltips are composed here and wrapped to width before they reach a text component, which cuts
+    // long saved text apart; it is matched while still whole. AddLine goes through Add.
+    [HarmonyPatch(typeof(RichTextBuilder), nameof(RichTextBuilder.Add), typeof(string), typeof(RenderHandler.ColorPalette), typeof(string),
+        typeof(bool), typeof(bool), typeof(bool), typeof(bool),
+        typeof(RenderHandler.ColorPalette), typeof(RenderHandler.ColorPalette), typeof(RenderHandler.ColorPalette))]
+    internal static class RichTextAddPatch
+    {
+        private static void Prefix(ref string text) => text = BakedText.Convert(text);
+    }
+
     [HarmonyPatch(typeof(MainMenuUIController), nameof(MainMenuUIController.HandleLocaleDropdown))]
     internal static class HandleLocaleDropdownPatch
     {
