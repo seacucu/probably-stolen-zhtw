@@ -8,7 +8,6 @@
 |---|---|
 | `LocalizedStringDatabase.GenerateLocalizedString` | 遊戲第一次用到某張簡中字串表時，把表內條目換成譯文（同時記下原文，切回簡體中文時換回去）。每條譯文附有簡中原文的雜湊，原文對不上就保留原文 |
 | `FontLoader.GetFontByRole` | 選正體中文時，把簡中字型資產換成用模組字型檔即時建立的繁中字型資產 |
-| `TMP_Text.text`、`TMP_Text.SetText` | 遊戲先前組好並存進存檔的簡中文字（物品、帳單、新聞、客人名稱），顯示時對照字串表原文換成譯文：整句相同、`{0}` 句型相符，或長句中出現的原文片段。只換畫面上的文字，不改遊戲資料與存檔 |
 | `MainMenuUIController.HandleLocaleDropdown`、`OnLocaleChanged` | 在語言選單最後加上「正體中文」。兩個中文選項都用遊戲的中文語系（`zh`），選哪一個決定顯示譯文或原版簡中，並存進遊戲設定 |
 
 模組不需要任何額外權限（遊戲的模組掃描不會偵測到檔案、網路等能力），檔案一律透過 `ModHelper` 讀取。

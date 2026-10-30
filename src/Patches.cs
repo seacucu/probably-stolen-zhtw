@@ -25,29 +25,6 @@ namespace ProbablyStolenZhTW
         }
     }
 
-    // Text composed earlier and kept in the save reaches the screen through these (BakedText).
-    [HarmonyPatch(typeof(TMP_Text), nameof(TMP_Text.text), MethodType.Setter)]
-    internal static class TextSetterPatch
-    {
-        private static void Prefix(ref string value) => value = BakedText.Convert(value);
-    }
-
-    [HarmonyPatch(typeof(TMP_Text), nameof(TMP_Text.SetText), typeof(string), typeof(bool))]
-    internal static class SetTextPatch
-    {
-        private static void Prefix(ref string sourceText) => sourceText = BakedText.Convert(sourceText);
-    }
-
-    // Tooltips are composed here and wrapped to width before they reach a text component, which cuts
-    // long saved text apart; it is matched while still whole. AddLine goes through Add.
-    [HarmonyPatch(typeof(RichTextBuilder), nameof(RichTextBuilder.Add), typeof(string), typeof(RenderHandler.ColorPalette), typeof(string),
-        typeof(bool), typeof(bool), typeof(bool), typeof(bool),
-        typeof(RenderHandler.ColorPalette), typeof(RenderHandler.ColorPalette), typeof(RenderHandler.ColorPalette))]
-    internal static class RichTextAddPatch
-    {
-        private static void Prefix(ref string text) => text = BakedText.Convert(text);
-    }
-
     [HarmonyPatch(typeof(MainMenuUIController), nameof(MainMenuUIController.HandleLocaleDropdown))]
     internal static class HandleLocaleDropdownPatch
     {
