@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Localization.Components;
+using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 
 namespace ProbablyStolenZhTW
@@ -37,6 +38,16 @@ namespace ProbablyStolenZhTW
             ZhTwMod.Log.Log($"譯文 {count} 條（{_tables.Count} 張字串表）");
         }
 
+        // Text kept in a save can come from any table, also ones the game has not used yet this session,
+        // so all translated tables are loaded (and patched) once the locale is Chinese.
+        internal static void Preload()
+        {
+            if (_tables == null || !ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code))
+                return;
+            foreach (string name in _tables.Keys)
+                LocalizationSettings.StringDatabase.GetTableAsync(name).Completed += op => Apply(op.Result);
+        }
+
         // Called before the game formats any entry of the table (Patches.GenerateLocalizedString).
         internal static void Apply(StringTable table)
         {
@@ -58,6 +69,7 @@ namespace ProbablyStolenZhTW
                 if (Hash(entry.Value) == row[0])
                 {
                     swaps.Add(new Swap { Entry = entry, Source = entry.Value, Text = row[1] });
+                    BakedText.Add(entry.Value, row[1]);
                     if (Variant.Traditional)
                         entry.Value = row[1];
                     applied++;

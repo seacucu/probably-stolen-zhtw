@@ -25,6 +25,19 @@ namespace ProbablyStolenZhTW
         }
     }
 
+    // Text composed earlier and kept in the save reaches the screen through these (BakedText).
+    [HarmonyPatch(typeof(TMP_Text), nameof(TMP_Text.text), MethodType.Setter)]
+    internal static class TextSetterPatch
+    {
+        private static void Prefix(ref string value) => value = BakedText.Convert(value);
+    }
+
+    [HarmonyPatch(typeof(TMP_Text), nameof(TMP_Text.SetText), typeof(string), typeof(bool))]
+    internal static class SetTextPatch
+    {
+        private static void Prefix(ref string sourceText) => sourceText = BakedText.Convert(sourceText);
+    }
+
     [HarmonyPatch(typeof(MainMenuUIController), nameof(MainMenuUIController.HandleLocaleDropdown))]
     internal static class HandleLocaleDropdownPatch
     {

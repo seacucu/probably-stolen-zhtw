@@ -96,6 +96,8 @@ namespace ProbablyStolenZhTW
                 if (!LocalizationSettings.InitializationOperation.IsDone)
                     return;
                 _refreshed = true;
+                OnLocaleChanged();
+                LocalizationSettings.SelectedLocaleChanged += locale => OnLocaleChanged();
                 Strings.RefreshShownText();
                 Fonts.SwapTexts();
                 LanguageMenu.AddOption(MainMenuUIController.Instance);
@@ -106,6 +108,12 @@ namespace ProbablyStolenZhTW
                 Variant.Set(!Variant.Traditional);
                 LanguageMenu.Sync(MainMenuUIController.Instance);
             }
+        }
+
+        private static void OnLocaleChanged()
+        {
+            BakedText.UpdateLocale();
+            Strings.Preload();
         }
     }
 }
