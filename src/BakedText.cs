@@ -104,8 +104,9 @@ namespace ProbablyStolenZhTW
         {
             if (!Variant.Traditional || !ChineseLocale || string.IsNullOrEmpty(value))
                 return value;
-            if (Exact.TryGetValue(value, out var exact) && !Translations.Contains(value))
-                return exact;
+            // Item flavor text reaches the tooltip with a leading space and can span several lines.
+            if (WholeEntry(value) is string whole)
+                return whole;
             bool simplified = HasSimplified(value, 0, value.Length);
             // Without Simplified characters, only composed text can hold a whole entry to replace.
             if (!simplified && value.IndexOf('\n') < 0 && value.IndexOf('<') < 0)
@@ -182,18 +183,24 @@ namespace ProbablyStolenZhTW
         private static void AppendRun(StringBuilder sb, string run)
         {
             string trimmed = run.Trim();
-            if (trimmed.Length > 0 && Exact.TryGetValue(trimmed, out var whole) && !Translations.Contains(trimmed))
-            {
-                int start = run.IndexOf(trimmed, System.StringComparison.Ordinal);
-                sb.Append(run, 0, start).Append(whole).Append(run, start + trimmed.Length, run.Length - start - trimmed.Length);
-                return;
-            }
-            if (!HasSimplified(run, 0, run.Length))
+            if (WholeEntry(run) is string whole)
+                sb.Append(whole);
+            else if (!HasSimplified(run, 0, run.Length))
                 sb.Append(run);
             else if (FromTemplate(trimmed) is string line)
                 sb.Append(run.Replace(trimmed, line));
             else
                 ReplaceSimplified(sb, run);
+        }
+
+        // The translation of a text that is a whole entry apart from surrounding whitespace, which is kept.
+        private static string WholeEntry(string value)
+        {
+            string trimmed = value.Trim();
+            if (trimmed.Length == 0 || !Exact.TryGetValue(trimmed, out var text) || Translations.Contains(trimmed))
+                return null;
+            int start = value.IndexOf(trimmed, System.StringComparison.Ordinal);
+            return value.Substring(0, start) + text + value.Substring(start + trimmed.Length);
         }
 
         // Longest known entry at each position, only where it is still Simplified.
