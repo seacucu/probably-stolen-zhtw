@@ -62,8 +62,15 @@ namespace ProbablyStolenZhTW
             Translations.Add(text);
             if (Placeholder.IsMatch(source))
                 AddTemplate(source, text);
-            else if (!Exact.ContainsKey(source))
-                Exact[source] = text;
+            else
+            {
+                if (!Exact.ContainsKey(source))
+                    Exact[source] = text;
+                // Some entries end in a stray space; composed text is matched without it.
+                string trimmed = source.Trim();
+                if (trimmed.Length > 0 && !Exact.ContainsKey(trimmed))
+                    Exact[trimmed] = text.Trim();
+            }
             _dirty = true;
             Cache.Clear();
         }
@@ -99,14 +106,20 @@ namespace ProbablyStolenZhTW
                 return value;
             if (Exact.TryGetValue(value, out var exact) && !Translations.Contains(value))
                 return exact;
-            if (!HasSimplified(value, 0, value.Length))
+            bool simplified = HasSimplified(value, 0, value.Length);
+            // Without Simplified characters, only composed text can hold a whole entry to replace.
+            if (!simplified && value.IndexOf('\n') < 0 && value.IndexOf('<') < 0)
                 return value;
             if (Cache.TryGetValue(value, out var cached))
                 return cached;
-            string result = FromTemplate(value) ?? ReplaceParts(value);
-            if (Cache.Count >= MaxCached)
-                Cache.Clear();
-            Cache[value] = result;
+            string result = (simplified ? FromTemplate(value) : null) ?? ReplaceParts(value);
+            // Unchanged composed text (counters, timers) changes often and is not worth keeping.
+            if (simplified || result != value)
+            {
+                if (Cache.Count >= MaxCached)
+                    Cache.Clear();
+                Cache[value] = result;
+            }
             return result;
         }
 
@@ -126,7 +139,9 @@ namespace ProbablyStolenZhTW
             return null;
         }
 
-        // Longest known entry at each position, outside rich text tags, only where it is still Simplified.
+        // Composed text (a tooltip with name, tags and description) is split at rich text tags and line
+        // breaks; a run that is a whole entry is replaced even if its characters are the same in both
+        // scripts (3D打印耗材), anything else only where it is still Simplified.
         private static string ReplaceParts(string value)
         {
             var sb = new StringBuilder(value.Length);
@@ -143,6 +158,44 @@ namespace ProbablyStolenZhTW
                         continue;
                     }
                 }
+                if (value[i] == '\n')
+                {
+                    sb.Append('\n');
+                    i++;
+                    continue;
+                }
+                int end = i;
+                while (end < value.Length && value[end] != '\n' && !(value[end] == '<' && value.IndexOf('>', end) > end))
+                    end++;
+                AppendRun(sb, value.Substring(i, end - i));
+                i = end;
+            }
+            return sb.ToString();
+        }
+
+        private static void AppendRun(StringBuilder sb, string run)
+        {
+            string trimmed = run.Trim();
+            if (trimmed.Length > 0 && Exact.TryGetValue(trimmed, out var whole) && !Translations.Contains(trimmed))
+            {
+                int start = run.IndexOf(trimmed, System.StringComparison.Ordinal);
+                sb.Append(run, 0, start).Append(whole).Append(run, start + trimmed.Length, run.Length - start - trimmed.Length);
+                return;
+            }
+            if (!HasSimplified(run, 0, run.Length))
+                sb.Append(run);
+            else if (FromTemplate(trimmed) is string line)
+                sb.Append(run.Replace(trimmed, line));
+            else
+                ReplaceSimplified(sb, run);
+        }
+
+        // Longest known entry at each position, only where it is still Simplified.
+        private static void ReplaceSimplified(StringBuilder sb, string value)
+        {
+            int i = 0;
+            while (i < value.Length)
+            {
                 int found = 0;
                 string text = null;
                 for (int len = System.Math.Min(MaxPart, value.Length - i); len >= MinPart; len--)
@@ -164,7 +217,6 @@ namespace ProbablyStolenZhTW
                     i++;
                 }
             }
-            return sb.ToString();
         }
 
         private static bool HasSimplified(string value, int start, int length)
