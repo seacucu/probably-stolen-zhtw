@@ -99,6 +99,7 @@ namespace ProbablyStolenZhTW
                 Strings.RefreshShownText();
                 Fonts.SwapTexts();
                 LanguageMenu.AddOption(MainMenuUIController.Instance);
+                Notice.ShowOnce(MainMenuUIController.Instance);
             }
             if (_switchKey && Input.GetKeyDown(SwitchKey) && !StoreUIManager.IsTextFieldFocused()
                 && ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code))
