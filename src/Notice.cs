@@ -27,7 +27,7 @@ namespace ProbablyStolenZhTW
         // are the mod's.
         internal static void ShowOnce(MainMenuUIController menu)
         {
-            if (menu == null || menu.confirmPanelUIManager == null || ES3.KeyExists(SaveKey) || !Variant.Traditional
+            if (menu == null || menu.confirmPanelUIManager == null || ES3.KeyExists(SaveKey)
                 || !ZhTwMod.IsChinese(LocHelper.GetCurrentLocaleCode())
                 || (menu.welcomePanel != null && menu.welcomePanel.activeSelf))
                 return;

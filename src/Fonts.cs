@@ -34,9 +34,6 @@ namespace ProbablyStolenZhTW
 
         private static readonly Dictionary<string, TMP_FontAsset> Built = new Dictionary<string, TMP_FontAsset>();
 
-        // Built asset -> the game asset it replaces, for switching back to Simplified Chinese.
-        private static readonly Dictionary<TMP_FontAsset, TMP_FontAsset> Originals = new Dictionary<TMP_FontAsset, TMP_FontAsset>();
-
         private static string _folder;
 
         internal static void Load()
@@ -72,11 +69,7 @@ namespace ProbablyStolenZhTW
             }
             Built[original.name] = built;
             if (built != null)
-            {
-                Originals[built] = original;
-                if (Variant.Traditional)
-                    ReplaceInFallbacks(original, built);
-            }
+                ReplaceInFallbacks(original, built);
             return built;
         }
 
@@ -141,32 +134,14 @@ namespace ProbablyStolenZhTW
                 TMP_Settings.fallbackFontAssets[g] = to;
         }
 
-        // Switches fallbacks and shown texts between the built fonts and the game's.
-        internal static void Show(bool traditional)
-        {
-            foreach (var pair in Originals)
-            {
-                if (traditional)
-                    ReplaceInFallbacks(pair.Value, pair.Key);
-                else
-                    ReplaceInFallbacks(pair.Key, pair.Value);
-            }
-            SwapTexts();
-        }
-
-        // Texts that were given the other variant's font before the mod loaded or the variant changed,
-        // or that set it in the scene.
+        // Texts that were given the game's font before the mod loaded, or that set it in the scene.
         internal static void SwapTexts()
         {
             if (!ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code))
                 return;
             foreach (var text in Resources.FindObjectsOfTypeAll<TMP_Text>())
             {
-                TMP_FontAsset replacement = null;
-                if (Variant.Traditional)
-                    replacement = Replacement(text.font);
-                else if (text.font != null)
-                    Originals.TryGetValue(text.font, out replacement);
+                var replacement = Replacement(text.font);
                 if (replacement != null)
                     text.font = replacement;
                 else if (text.isActiveAndEnabled)
