@@ -50,7 +50,6 @@ namespace ProbablyStolenZhTW
                 return;
             }
             SceneManager.sceneLoaded += (scene, mode) => Fonts.SwapTexts();
-            LocalizationSettings.SelectedLocaleChanged += locale => WaterNames.Refresh();
         }
 
         private void Update()
@@ -61,7 +60,6 @@ namespace ProbablyStolenZhTW
             _refreshed = true;
             Strings.RefreshShownText();
             Fonts.SwapTexts();
-            WaterNames.Refresh();
             LanguageMenu.RenameOption(MainMenuUIController.Instance);
             Notice.ShowOnce(MainMenuUIController.Instance);
         }
