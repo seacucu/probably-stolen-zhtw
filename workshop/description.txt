@@ -40,3 +40,5 @@
 看到不順或錯誤的譯文，歡迎在留言區或 GitHub 回報，附上截圖更好。
 程式碼 MIT；字型皆為 SIL Open Font License 1.1。遊戲文字與素材的權利屬於 Questing Goose Studio。
 原始碼與問題回報：[url=https://github.com/seacucu/probably-stolen-zhtw]github.com/seacucu/probably-stolen-zhtw[/url]
+
+[img]https://raw.githubusercontent.com/seacucu/probably-stolen-zhtw/main/docs/rate-favorite.gif[/img]
