@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 
@@ -9,23 +10,36 @@ namespace ProbablyStolenZhTW
     // change, a save started in Simplified Chinese), no water sells. Every grade name the game reads is
     // turned into the static one for its purity, so the comparisons hold whatever the language.
     //
-    // Nothing here may patch a WaterFeatureHelper method, or let a patch be inlined into one: compiling such a
-    // method runs WaterFeatureHelper's static initializer while the mod loads, before the game's localization
-    // is ready, and the names are then kept in the table's Simplified Chinese for the whole session. Its
-    // fields are read only from the non-inlined methods below, which run during play.
+    // WaterFeatureHelper's fields are read only once the game is reading a water grade itself, from the
+    // non-inlined methods below. Touching the class any earlier (patching one of its methods, or reading a
+    // field when any other list or feature is read) can run its static initializer before the game's
+    // localization is ready, and the names are then kept in the table's Simplified Chinese for the session.
     internal static class WaterGrades
     {
         private const string Category = "CATEGORY_WATER_PURITY";
 
+        // Grade name keys -> their index in WaterFeatureHelper.WATER_DISPLAY.
+        private static readonly Dictionary<string, int> Keys = new Dictionary<string, int>
+        {
+            ["mech_condition_pure_water"] = 0,
+            ["mech_condition_high_quality_water"] = 1,
+            ["mech_condition_basewater"] = 2,
+            ["mech_condition_ghostwater"] = 3,
+            ["mech_condition_rustwater"] = 4,
+            ["mech_condition_gutterflow"] = 5,
+        };
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static string NameOf(int purity) => WaterFeatureHelper.WATER_DISPLAY[WaterFeatureHelper.GetPurityArrayIndex(purity)];
 
-        // GetWaterDisplayName reads the grade names through this list, looked up again on each read.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void Canonical(LocalizedLines lines, int index, ref string name)
+        private static string NameAt(int grade) => WaterFeatureHelper.WATER_DISPLAY[grade];
+
+        // GetWaterDisplayName reads the grade names through a LocalizedLines, looked up again on each read.
+        internal static void Canonical(string table, string key, ref string name)
         {
-            if (ReferenceEquals(lines, WaterFeatureHelper.WATER_DISPLAY_LOCALIZED))
-                name = WaterFeatureHelper.WATER_DISPLAY[index];
+            if (table == "Mechanic" && key != null && Keys.TryGetValue(key, out int grade))
+                name = NameAt(grade);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -39,8 +53,8 @@ namespace ProbablyStolenZhTW
     [HarmonyPatch(typeof(LocalizedLines), "Item", MethodType.Getter)]
     internal static class LocalizedLinesItemPatch
     {
-        private static void Postfix(LocalizedLines __instance, int index, ref string __result) =>
-            WaterGrades.Canonical(__instance, index, ref __result);
+        private static void Postfix(int index, string ___table, string[] ___keys, ref string __result) =>
+            WaterGrades.Canonical(___table, ___keys[index], ref __result);
     }
 
     [HarmonyPatch(typeof(ItemFeature), nameof(ItemFeature.GetBaseRealDisplay))]
