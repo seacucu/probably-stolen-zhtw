@@ -20,8 +20,8 @@ namespace ProbablyStolenZhTW
         // Game font asset name -> replacement.
         private static readonly Dictionary<string, Spec> Specs = new Dictionary<string, Spec>
         {
-            // Body text. At the game's small sizes Regular reads too heavy, and glyphs need a little air.
-            ["NotoSansSC-VariableFont_wght"] = new Spec { File = "GenYoGothic2TW-L.otf", Spacing = 5, WesternMetrics = true },
+            // Body text. Glyphs need a little air at the game's small sizes.
+            ["NotoSansSC-VariableFont_wght"] = new Spec { File = "GenYoGothic2TW-M.otf", Spacing = 3.7f, WesternMetrics = true },
             ["WDXLLubrifontSC-Regular SDF"] = new Spec { File = "WDXLLubrifontTC-Regular.ttf" },
             ["MaShanZheng-Regular SDF"] = new Spec { File = "LXGWWenKaiTC-Regular.ttf" },
         };
@@ -88,6 +88,9 @@ namespace ProbablyStolenZhTW
             // Keep the game's material settings (outline, softness, ...) with the new atlas.
             var material = new Material(original.material) { hideFlags = HideFlags.DontUnloadUnusedAsset };
             material.SetTexture(ShaderUtilities.ID_MainTex, asset.atlasTexture);
+            // The game thickens its thin Noto Sans SC with a face dilate of 0.35; our fonts carry their own weight.
+            material.SetFloat(ShaderUtilities.ID_FaceDilate, 0);
+            ShaderUtilities.UpdateShaderRatios(material);
             asset.material = material;
             asset.atlasTexture.hideFlags = HideFlags.DontUnloadUnusedAsset;
 

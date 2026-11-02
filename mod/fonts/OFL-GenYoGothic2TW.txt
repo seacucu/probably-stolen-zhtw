@@ -1,4 +1,4 @@
-GenYo Gothic 2 TW (GenYoGothic2TW-L.otf)
+GenYo Gothic 2 TW (GenYoGothic2TW-M.otf)
 Copyright (c) ButTaiwan, https://github.com/ButTaiwan/genyog-font
 GenYo Gothic is a modified font of Source Han Sans, Copyright 2014-2019 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.
 
