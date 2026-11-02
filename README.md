@@ -55,8 +55,8 @@
 
 | 用途 | 原字型 | 替換為 |
 |---|---|---|
-| 內文 | Noto Sans SC | [源樣黑體 GenYo Gothic 2 TW](https://github.com/ButTaiwan/genyog-font) Medium（ButTaiwan），字距 +0.037 em，行距沿用西文 Noto Sans |
-| 標題 | WDXL Lubrifont SC | [WDXL Lubrifont TC](https://fonts.google.com/specimen/WDXL+Lubrifont+TC) |
+| 內文 | Noto Sans SC | [源樣黑體 GenYo Gothic 2 TW](https://github.com/ButTaiwan/genyog-font) Medium（ButTaiwan），字距 +0.037 em，行距沿用西文 Noto Sans；遊戲給的字級低於 16 px（1080p）時，在文字框容得下的範圍內放大到 16 px |
+| 標題 | WDXL Lubrifont SC | [WDXL Lubrifont TC](https://fonts.google.com/specimen/WDXL+Lubrifont+TC)，在文字框容得下的範圍內最多放大 1.1 倍 |
 | 手寫 | Ma Shan Zheng | [霞鶩文楷 TC](https://github.com/lxgw/LxgwWenkaiTC) |
 
 三套字型皆以 SIL Open Font License 1.1 授權，授權全文見 `mod/fonts/OFL-*.txt`。

@@ -10,19 +10,29 @@ namespace ProbablyStolenZhTW
     // Swaps the game's Simplified Chinese TMP fonts for Traditional Chinese ones built from the mod's font files.
     internal static class Fonts
     {
-        private sealed class Spec
+        internal sealed class Spec
         {
             public string File;
-            public float Spacing;      // TMP normalSpacingOffset, in 1/100 em
+            public float Spacing;         // TMP normalSpacingOffset, in 1/100 em
             public bool WesternMetrics;
+            public float Grow = 1;        // texts enlarged up to this much, as far as their boxes allow
+            public float MinSize;         // smaller texts enlarged toward this size (pixels at 1080p), as far as their boxes allow
         }
 
         // Game font asset name -> replacement.
         private static readonly Dictionary<string, Spec> Specs = new Dictionary<string, Spec>
         {
-            // Body text. Glyphs need a little air at the game's small sizes.
-            ["NotoSansSC-VariableFont_wght"] = new Spec { File = "GenYoGothic2TW-M.otf", Spacing = 3.7f, WesternMetrics = true },
-            ["WDXLLubrifontSC-Regular SDF"] = new Spec { File = "WDXLLubrifontTC-Regular.ttf" },
+            // Body text. Glyphs need a little air at the game's small sizes, and the smallest sizes (guide books)
+            // suit Latin text but are too small for Chinese.
+            ["NotoSansSC-VariableFont_wght"] = new Spec
+            {
+                File = "GenYoGothic2TW-M.otf", Spacing = 3.7f, WesternMetrics = true, MinSize = 16,
+            },
+            // Titles, buttons and notes: a little larger where their boxes have room.
+            ["WDXLLubrifontSC-Regular SDF"] = new Spec
+            {
+                File = "WDXLLubrifontTC-Regular.ttf", Grow = 1.1f,
+            },
             ["MaShanZheng-Regular SDF"] = new Spec { File = "LXGWWenKaiTC-Regular.ttf" },
         };
 
@@ -33,6 +43,7 @@ namespace ProbablyStolenZhTW
         private const string MetricsFrom = "NotoSans-Medium SDF";
 
         private static readonly Dictionary<string, TMP_FontAsset> Built = new Dictionary<string, TMP_FontAsset>();
+        private static readonly Dictionary<TMP_FontAsset, Spec> SpecOfBuilt = new Dictionary<TMP_FontAsset, Spec>();
 
         private static string _folder;
 
@@ -69,8 +80,17 @@ namespace ProbablyStolenZhTW
             }
             Built[original.name] = built;
             if (built != null)
+            {
+                SpecOfBuilt[built] = spec;
                 ReplaceInFallbacks(original, built);
+            }
             return built;
+        }
+
+        // The spec a replacement asset was built from, or null for any other font.
+        internal static Spec SpecOf(TMP_FontAsset font)
+        {
+            return font != null && SpecOfBuilt.TryGetValue(font, out var spec) ? spec : null;
         }
 
         private static TMP_FontAsset Build(Spec spec, TMP_FontAsset original)

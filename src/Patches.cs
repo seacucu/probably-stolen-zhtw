@@ -25,6 +25,19 @@ namespace ProbablyStolenZhTW
         }
     }
 
+    // The game and the mod both assign fonts through this setter, so every text that takes a growing font passes here.
+    [HarmonyPatch(typeof(TMP_Text), nameof(TMP_Text.font), MethodType.Setter)]
+    internal static class FontSetterPatch
+    {
+        private static void Postfix(TMP_Text __instance) => TextGrow.FontChanged(__instance);
+    }
+
+    [HarmonyPatch(typeof(TMP_Text), nameof(TMP_Text.fontSize), MethodType.Setter)]
+    internal static class FontSizeSetterPatch
+    {
+        private static void Postfix(TMP_Text __instance) => TextGrow.SizeChanged(__instance);
+    }
+
     [HarmonyPatch(typeof(MainMenuUIController), nameof(MainMenuUIController.HandleLocaleDropdown))]
     internal static class HandleLocaleDropdownPatch
     {
