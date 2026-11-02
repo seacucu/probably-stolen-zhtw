@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
@@ -13,15 +14,25 @@ namespace ProbablyStolenZhTW
         {
             public bool AutoSizing;
             public float Min, Max, Size;
+
+            public Sizing Copy() => (Sizing)MemberwiseClone();
         }
 
         // Texts currently grown -> the game's own sizing.
         private static readonly ConditionalWeakTable<TMP_Text, Sizing> Grown = new ConditionalWeakTable<TMP_Text, Sizing>();
 
+        // Auto-size range given to grown texts -> the game's sizing it replaced. A copy the game makes of a grown text
+        // carries that range but isn't in Grown; this gives it the game's sizing back instead of growing it twice.
+        private static readonly Dictionary<(float, float), Sizing> GrownRanges = new Dictionary<(float, float), Sizing>();
+
         internal static void FontChanged(TMP_Text text)
         {
             bool grown = Grown.TryGetValue(text, out var sizing);
-            if (!grown)
+            Sizing original = null;
+            bool copied = !grown && text.enableAutoSizing && GrownRanges.TryGetValue((text.fontSizeMin, text.fontSizeMax), out original);
+            if (copied)
+                sizing = original.Copy();
+            else if (!grown)
             {
                 sizing = new Sizing
                 {
@@ -34,7 +45,7 @@ namespace ProbablyStolenZhTW
             float max = GrownMax(text, sizing);
             if (max <= GameMax(sizing))
             {
-                if (grown)
+                if (grown || copied)
                     Restore(text, sizing);
                 return;
             }
@@ -53,12 +64,14 @@ namespace ProbablyStolenZhTW
         }
 
         // A text's size in pixels on a 1080p screen, or 0 where that has no meaning (world-space canvases).
+        // Counts the scale of every transform between the text and its canvas, which the game uses to enlarge pixel-art UI.
         internal static float PixelsAt1080(TMP_Text text, float size)
         {
             var canvas = text.canvas != null ? text.canvas.rootCanvas : null;
             if (canvas == null || canvas.renderMode == RenderMode.WorldSpace)
                 return 0;
-            return size * canvas.scaleFactor * 1080f / Screen.height;
+            float scale = text.transform.lossyScale.y / canvas.transform.lossyScale.y * canvas.scaleFactor;
+            return size * scale * 1080f / Screen.height;
         }
 
         private static float GameMax(Sizing sizing) => sizing.AutoSizing ? sizing.Max : sizing.Size;
@@ -78,7 +91,9 @@ namespace ProbablyStolenZhTW
 
         private static void Apply(TMP_Text text, Sizing sizing, float max)
         {
-            text.fontSizeMin = sizing.AutoSizing ? sizing.Min : sizing.Size;
+            float min = sizing.AutoSizing ? sizing.Min : sizing.Size;
+            GrownRanges[(min, max)] = sizing;
+            text.fontSizeMin = min;
             text.fontSizeMax = max;
             text.enableAutoSizing = true;
         }
