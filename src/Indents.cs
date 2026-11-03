@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using HarmonyLib;
 using UnityEngine.Localization.Settings;
@@ -15,15 +16,15 @@ namespace ProbablyStolenZhTW
 
         internal static string Drop(string indent) => Chinese ? "" : indent;
 
-        // Passes the method's first occurrence of the indent literal through News or Drop.
-        internal static IEnumerable<CodeInstruction> Wrap(IEnumerable<CodeInstruction> instructions, string indent, string replace)
+        // Passes the method's first all-space literal, the indent, through News or Drop.
+        internal static IEnumerable<CodeInstruction> Wrap(IEnumerable<CodeInstruction> instructions, string replace)
         {
             var method = AccessTools.Method(typeof(Indents), replace);
             bool found = false;
             foreach (var instruction in instructions)
             {
                 yield return instruction;
-                if (!found && instruction.operand is string s && s == indent)
+                if (!found && instruction.operand is string s && s.Length > 0 && s.Trim().Length == 0)
                 {
                     found = true;
                     yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Call, method);
@@ -38,22 +39,38 @@ namespace ProbablyStolenZhTW
     internal static class NewsIndentPatch
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) =>
-            Indents.Wrap(instructions, "     ", nameof(Indents.News));
+            Indents.Wrap(instructions, nameof(Indents.News));
     }
 
-    // The new-game description of the Fence start.
-    [HarmonyPatch(typeof(MainMenuUIController), nameof(MainMenuUIController.OnFenceClick))]
-    internal static class FenceIndentPatch
+    // The new-game descriptions of the starts.
+    [HarmonyPatch]
+    internal static class StartIndentPatch
     {
+        private static readonly string[] Starts =
+        {
+            nameof(MainMenuUIController.OnWaterMerchantClick), nameof(MainMenuUIController.OnGeneralistClick),
+            nameof(MainMenuUIController.OnScavengerClick), nameof(MainMenuUIController.OnFenceClick),
+            nameof(MainMenuUIController.OnMoonshinerClick), nameof(MainMenuUIController.OnGunsmithClick),
+            nameof(MainMenuUIController.OnDrugDealer), nameof(MainMenuUIController.OnOrganTrader),
+            nameof(MainMenuUIController.OnPharmacist), nameof(MainMenuUIController.OnStreetFood),
+            nameof(MainMenuUIController.OnFarmer), nameof(MainMenuUIController.OnRancher),
+        };
+
+        private static IEnumerable<MethodBase> TargetMethods()
+        {
+            foreach (var name in Starts)
+                yield return AccessTools.Method(typeof(MainMenuUIController), name);
+        }
+
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) =>
-            Indents.Wrap(instructions, "   ", nameof(Indents.Drop));
+            Indents.Wrap(instructions, nameof(Indents.Drop));
     }
 
     [HarmonyPatch(typeof(GameOverUIManager), nameof(GameOverUIManager.DisplayUI))]
     internal static class GameOverIndentPatch
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) =>
-            Indents.Wrap(instructions, "  ", nameof(Indents.Drop));
+            Indents.Wrap(instructions, nameof(Indents.Drop));
     }
 
     // AddEmptyLine's spacer never gets a line of its own: the tooltip's next line continues after it, so it only shows

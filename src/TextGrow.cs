@@ -54,10 +54,15 @@ namespace ProbablyStolenZhTW
             Apply(text, sizing, max);
         }
 
-        // The game resized a grown text: grow from the new size.
+        // The game resized a grown text: grow from the new size. Turning auto-size off first means the game sizes the
+        // text itself from now on.
         internal static void SizeChanged(TMP_Text text)
         {
-            if (!Grown.TryGetValue(text, out var sizing) || sizing.AutoSizing)
+            if (!Grown.TryGetValue(text, out var sizing))
+                return;
+            if (!text.enableAutoSizing)
+                sizing.AutoSizing = false;
+            else if (sizing.AutoSizing)
                 return;
             sizing.Size = text.fontSize;
             FontChanged(text);
@@ -70,9 +75,12 @@ namespace ProbablyStolenZhTW
             var canvas = text.canvas != null ? text.canvas.rootCanvas : null;
             if (canvas == null || canvas.renderMode == RenderMode.WorldSpace)
                 return 0;
-            float scale = text.transform.lossyScale.y / canvas.transform.lossyScale.y * canvas.scaleFactor;
-            return size * scale * 1080f / Screen.height;
+            float pixels = size * text.transform.lossyScale.y / canvas.transform.lossyScale.y * canvas.scaleFactor * 1080f / Screen.height;
+            return float.IsNaN(pixels) || float.IsInfinity(pixels) ? 0 : pixels;
         }
+
+        // Caps MinSize growth: a text measured mid-animation (scaled down) would otherwise fill its whole box.
+        private const float MaxMinSizeGrow = 2;
 
         private static float GameMax(Sizing sizing) => sizing.AutoSizing ? sizing.Max : sizing.Size;
 
@@ -85,7 +93,7 @@ namespace ProbablyStolenZhTW
             float max = gameMax * spec.Grow;
             float pixels = PixelsAt1080(text, gameMax);
             if (spec.MinSize > 0 && pixels > 0 && pixels < spec.MinSize)
-                max = Mathf.Max(max, gameMax * spec.MinSize / pixels);
+                max = Mathf.Max(max, gameMax * Mathf.Min(spec.MinSize / pixels, MaxMinSizeGrow));
             return max;
         }
 
