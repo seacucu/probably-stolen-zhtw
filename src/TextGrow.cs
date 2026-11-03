@@ -6,14 +6,15 @@ using UnityEngine;
 namespace ProbablyStolenZhTW
 {
     // Enlarges texts set in a replacement font that asks for it (Fonts.Spec.Grow, Fonts.Spec.MinSize), as far as
-    // each text's box allows: TMP auto-size between the size the game chose and the enlarged size. Texts that leave
-    // the font, or no longer need enlarging, get the game's sizing back.
+    // each text's box allows: TMP auto-size between the size the game chose and the enlarged size, tightening the
+    // line spacing first where the box is too short. Texts that leave the font, or no longer need enlarging, get the
+    // game's sizing back.
     internal static class TextGrow
     {
         private sealed class Sizing
         {
             public bool AutoSizing;
-            public float Min, Max, Size;
+            public float Min, Max, Size, LineSpacingMax;
 
             public Sizing Copy() => (Sizing)MemberwiseClone();
         }
@@ -40,6 +41,7 @@ namespace ProbablyStolenZhTW
                     Min = text.fontSizeMin,
                     Max = text.fontSizeMax,
                     Size = text.fontSize,
+                    LineSpacingMax = text.lineSpacingAdjustment,
                 };
             }
             float max = GrownMax(text, sizing);
@@ -82,6 +84,10 @@ namespace ProbablyStolenZhTW
         // Caps MinSize growth: a text measured mid-animation (scaled down) would otherwise fill its whole box.
         private const float MaxMinSizeGrow = 2;
 
+        // How far auto-size may tighten a grown text's line spacing (em/100) before it shrinks the font: the body
+        // font's line height of 1.36 em down to about 1.15 em.
+        private const float LineSpacingTighten = -21;
+
         private static float GameMax(Sizing sizing) => sizing.AutoSizing ? sizing.Max : sizing.Size;
 
         private static float GrownMax(TMP_Text text, Sizing sizing)
@@ -103,6 +109,7 @@ namespace ProbablyStolenZhTW
             GrownRanges[(min, max)] = sizing;
             text.fontSizeMin = min;
             text.fontSizeMax = max;
+            text.lineSpacingAdjustment = Mathf.Min(sizing.LineSpacingMax, LineSpacingTighten);
             text.enableAutoSizing = true;
         }
 
@@ -112,6 +119,7 @@ namespace ProbablyStolenZhTW
             text.enableAutoSizing = sizing.AutoSizing;
             text.fontSizeMin = sizing.Min;
             text.fontSizeMax = sizing.Max;
+            text.lineSpacingAdjustment = sizing.LineSpacingMax;
             text.fontSize = sizing.Size;
         }
     }
