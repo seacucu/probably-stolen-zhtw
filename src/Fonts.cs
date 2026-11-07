@@ -33,7 +33,7 @@ namespace ProbablyStolenZhTW
             {
                 File = "WDXLLubrifontTC-Regular.ttf", Grow = 1.1f,
             },
-            ["MaShanZheng-Regular SDF"] = new Spec { File = "LXGWWenKaiTC-Regular.ttf" },
+            ["MaShanZheng-Regular SDF"] = new Spec { File = "Bakudai-Medium.ttf" },
         };
 
         private const string BodyFont = "NotoSansSC-VariableFont_wght";

@@ -39,8 +39,9 @@
 ### 注意
 
 - 請停用其他中文翻譯模組，同時啟用會互相干擾。
-- 遊戲更新後，原文有變動的句子會先顯示遊戲原本的簡體中文，等本模組更新後再換成譯文，不會顯示過時的內容。
-- **請開新檔遊玩。** 遊戲會把物品名稱、帳單、客人、新聞等文字在產生當下存進存檔，用簡體中文玩過的舊存檔，這些既有內容仍是簡體；之後新產生的內容才是正體。
+- 遊戲更新後原文有變動的句子不會顯示過時的譯文，而是把遊戲原本的簡體中文自動轉成正體，等本模組更新後再換成精校譯文。
+- 簡體護欄：任何即將顯示在畫面上的簡體字（還沒翻譯的新文字、程式組出來的文字、舊存檔內容）都會在顯示前用 OpenCC 轉成正體。精校譯文不會被改動，建置時會驗證這一點。
+- **建議開新檔遊玩。** 遊戲會把物品名稱、帳單、客人、新聞等文字在產生當下存進存檔。用簡體中文玩過的舊存檔，這些既有內容只會自動轉成正體，不是精校譯文；之後新產生的內容才是精校譯文。
 
 ## 譯文進度
 
@@ -57,7 +58,7 @@
 |---|---|---|
 | 內文 | Noto Sans SC | [源樣黑體 GenYo Gothic 2 TW](https://github.com/ButTaiwan/genyog-font) Medium（ButTaiwan），字距 +0.037 em，行距沿用西文 Noto Sans；遊戲給的字級低於 16 px（1080p）時，在文字框容得下的範圍內放大到 16 px |
 | 標題 | WDXL Lubrifont SC | [WDXL Lubrifont TC](https://fonts.google.com/specimen/WDXL+Lubrifont+TC)，在文字框容得下的範圍內最多放大 1.1 倍 |
-| 手寫 | Ma Shan Zheng | [霞鶩文楷 TC](https://github.com/lxgw/LxgwWenkaiTC) |
+| 手寫 | Ma Shan Zheng | [莫大毛筆字體 Bakudai](https://github.com/max32002/bakudaifont) Medium（衡山毛筆フォント補字版） |
 
 三套字型皆以 SIL Open Font License 1.1 授權，授權全文見 `mod/fonts/OFL-*.txt`。
 

@@ -44,7 +44,7 @@ namespace ProbablyStolenZhTW
                 if (entry == null || entry.Key == null || !rows.TryGetValue(entry.Key, out var row))
                     continue;
                 // An entry whose source text changed in a game update keeps the game's text until the
-                // translation is updated, rather than showing an outdated line.
+                // translation is updated, rather than showing an outdated line; Guard converts it on screen.
                 if (Hash(entry.Value) == row[0])
                 {
                     entry.Value = row[1];
@@ -55,7 +55,7 @@ namespace ProbablyStolenZhTW
                     changed++;
                 }
             }
-            ZhTwMod.Log.Log($"字串表 {table.TableCollectionName}：套用 {applied} 條" + (changed > 0 ? $"，原文已變動而略過 {changed} 條" : ""));
+            ZhTwMod.Log.Log($"字串表 {table.TableCollectionName}：套用 {applied} 條" + (changed > 0 ? $"，原文已變動、改由簡體護欄轉換 {changed} 條" : ""));
         }
 
         internal static void RefreshShownText()

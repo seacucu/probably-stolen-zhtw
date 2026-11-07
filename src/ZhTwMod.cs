@@ -41,6 +41,7 @@ namespace ProbablyStolenZhTW
             try
             {
                 Strings.Load();
+                Guard.Load();
                 Fonts.Load();
             }
             catch (Exception e)
@@ -58,6 +59,8 @@ namespace ProbablyStolenZhTW
             if (_refreshed || !LocalizationSettings.InitializationOperation.IsDone)
                 return;
             _refreshed = true;
+            LocalizationSettings.SelectedLocaleChanged += Guard.LocaleChanged;
+            Guard.LocaleChanged(LocalizationSettings.SelectedLocale);
             Strings.RefreshShownText();
             Fonts.SwapTexts();
             LanguageMenu.RenameOption(MainMenuUIController.Instance);
