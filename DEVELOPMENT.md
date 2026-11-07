@@ -19,10 +19,11 @@
 ```
 tools\build.ps1             # 編譯並組出 dist\seacucu.zh-tw\ 與 dist\seacucu.zh-tw.zip
 tools\build.ps1 -Install    # 同上，並複製到遊戲的 Mods\ 測試
-gh release create v1.3.0 dist\seacucu.zh-tw.zip --notes "更新說明"   # 發佈，並自動上傳到工作坊
+gh release create v1.5.1 dist\seacucu.zh-tw.zip --notes-file dist/release-notes.md   # 發佈，並自動上傳到工作坊
 ```
 
 - 遊戲不在預設位置時，加上 `-GameDir <遊戲資料夾>`。
+- 更新紀錄只寫在 `mod/data/changelog.txt`（新版本在最上面，沒有項目的版本不列出）。建置時會寫進 `workshop/description.txt` 的「更新紀錄」與 `dist/release-notes.md`；模組更新後也會在遊戲主選單跳出這次的紀錄，主選單的感謝按鈕可以看全部紀錄。
 - 發佈 GitHub Release 時，`.github/workflows/workshop.yml` 會把附檔 `seacucu.zh-tw.zip` 上傳到 `workshop/publishedfileid.txt` 指定的工作坊項目，
   Release 說明會成為工作坊的更新說明。工作坊頁面的標題、說明與預覽圖取自 main 分支的 `workshop/title.txt`、`description.txt`、`preview.png`，每次上傳都會覆寫。
   SteamCMD 只能寫入預設（英文）區，兩區都用同一份中文。工作坊頁面另有正體中文區時，要切換到該語言後把同樣的標題與說明手動貼上。

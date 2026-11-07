@@ -11,10 +11,12 @@ namespace ProbablyStolenZhTW
         internal const string ModId = "seacucu.zh-tw";
 
         internal static ModLog Log;
+        internal static string Version;
 
         public void Init(ModManifest manifest)
         {
             Log = new ModLog(manifest);
+            Version = manifest.ModVersion;
             var host = new GameObject("ZhTW");
             UnityEngine.Object.DontDestroyOnLoad(host);
             host.AddComponent<Runner>();
@@ -43,6 +45,7 @@ namespace ProbablyStolenZhTW
                 Strings.Load();
                 Guard.Load();
                 Fonts.Load();
+                Changelog.Load(ZhTwMod.Version);
             }
             catch (Exception e)
             {
@@ -55,6 +58,7 @@ namespace ProbablyStolenZhTW
 
         private void Update()
         {
+            Changelog.Update();
             // Text shown before the data loaded is still Simplified Chinese: redraw it once localization is up.
             if (_refreshed || !LocalizationSettings.InitializationOperation.IsDone)
                 return;
@@ -64,7 +68,6 @@ namespace ProbablyStolenZhTW
             Strings.RefreshShownText();
             Fonts.SwapTexts();
             LanguageMenu.RenameOption(MainMenuUIController.Instance);
-            Notice.ShowOnce(MainMenuUIController.Instance);
         }
     }
 }
