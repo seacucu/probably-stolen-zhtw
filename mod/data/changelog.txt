@@ -2,6 +2,10 @@
 # number, then an optional name. A version without items is listed nowhere. The mod shows the history
 # in game; tools\build.ps1 writes it into the Workshop description and the release notes.
 
+1.5.2
+- 工具箱還沒解鎖的欄位改顯示「未解鎖」（原為「已鎖定」）。
+- 客人 Food Thief 改譯「食物竊賊」（原為「偷食物的賊」）。
+
 1.5.1
 
 1.5.0
