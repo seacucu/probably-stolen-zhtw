@@ -6,6 +6,9 @@
 # Secrets: STEAM_USERNAME, and STEAM_CONFIG_VDF = base64 of SteamCMD's config/config.vdf after a
 # successful login on your own machine (it holds the login token, so no password or Steam Guard code
 # is needed here). Renew it when the upload step reports a login failure.
+#
+# Run it by hand with text_only to update just the page (title, description, preview) from the default
+# branch: no files are uploaded and no change note is added.
 name: Workshop upload
 
 on:
@@ -14,8 +17,12 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag to upload again
-        required: true
+        description: Release tag to upload again (not needed with text_only)
+        required: false
+      text_only:
+        description: Only update the page's title, description and preview
+        type: boolean
+        default: false
 
 concurrency: workshop
 
@@ -24,12 +31,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      TEXT_ONLY: ${{ inputs.text_only == true }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.repository.default_branch }}
 
       - name: Fetch release zip
+        if: env.TEXT_ONLY != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -61,7 +70,7 @@ jobs:
           PUBLIC: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         run: |
           # A manual re-run reuses the release's notes as the change note.
-          [ -n "$NOTES" ] || export NOTES="$(gh release view "$TAG" --json body -q .body)"
+          [ "$TEXT_ONLY" = true ] || [ -n "$NOTES" ] || export NOTES="$(gh release view "$TAG" --json body -q .body)"
           python3 - <<'EOF'
           import os, pathlib
           # SteamCMD's VDF reader ends a value at any double quote, escaped or not.
@@ -81,6 +90,8 @@ jobs:
               "description": (w / "description.txt").read_text(encoding="utf-8").strip(),
               "changenote": f"{tag}\n{notes}" if notes else tag,
           }
+          if os.environ.get("TEXT_ONLY") == "true":
+              del fields["contentfolder"], fields["changenote"]
           if os.environ.get("PUBLIC") == "true":
               fields["visibility"] = "0"
           body = "\n".join(f"\t{q(k)} {q(v)}" for k, v in fields.items())
