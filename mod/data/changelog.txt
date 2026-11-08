@@ -2,6 +2,10 @@
 # number, then an optional name. A version without items is listed nowhere. The mod shows the history
 # in game; tools\build.ps1 writes it into the Workshop description and the release notes.
 
+1.5.3
+- 機器說明的模組影響改照「性能、能效、品質」排列，跟游標移到機器上看到的模組效果一致。
+- 舊存檔裡的機器說明，讀檔時自動換成最新譯文，不必開新檔也看得到「性能」「能效」。
+
 1.5.2
 - 工具箱還沒解鎖的欄位改顯示「未解鎖」（原為「已鎖定」）。
 - 客人 Food Thief 改譯「食物竊賊」（原為「偷食物的賊」）。
