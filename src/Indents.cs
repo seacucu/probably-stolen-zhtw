@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using HarmonyLib;
-using UnityEngine.Localization.Settings;
 
 namespace ProbablyStolenZhTW
 {
@@ -10,11 +9,9 @@ namespace ProbablyStolenZhTW
     // They don't line up with Chinese characters, so Chinese keeps only the newspaper's, as two ideographic spaces.
     internal static class Indents
     {
-        internal static bool Chinese => ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code);
+        internal static string News(string indent) => ZhTwMod.Active ? "\u3000\u3000" : indent;
 
-        internal static string News(string indent) => Chinese ? "\u3000\u3000" : indent;
-
-        internal static string Drop(string indent) => Chinese ? "" : indent;
+        internal static string Drop(string indent) => ZhTwMod.Active ? "" : indent;
 
         // Passes the method's first all-space literal, the indent, through News or Drop.
         internal static IEnumerable<CodeInstruction> Wrap(IEnumerable<CodeInstruction> instructions, string replace)
@@ -80,7 +77,7 @@ namespace ProbablyStolenZhTW
     {
         private static bool Prefix(RichTextBuilder __instance, ref RichTextBuilder __result, ref string ___nextBegin)
         {
-            if (!Indents.Chinese)
+            if (!ZhTwMod.Active)
                 return true;
             ___nextBegin = "\n";
             __result = __instance;
@@ -97,7 +94,7 @@ namespace ProbablyStolenZhTW
 
         private static void Prefix(ref string body)
         {
-            if (body != null && Indents.Chinese)
+            if (body != null && ZhTwMod.Active)
                 body = LineIndent.Replace(body, "");
         }
     }

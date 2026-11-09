@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using HarmonyLib;
-using UnityEngine.Localization.Settings;
 
 namespace ProbablyStolenZhTW
 {
@@ -14,7 +13,7 @@ namespace ProbablyStolenZhTW
         };
 
         internal static string Translate(string name) =>
-            ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code) && Names.TryGetValue(name, out var text) ? text : name;
+            ZhTwMod.Active && Names.TryGetValue(name, out var text) ? text : name;
 
         // Passes each listed English literal in the method through Translate.
         internal static IEnumerable<CodeInstruction> Wrap(IEnumerable<CodeInstruction> instructions)

@@ -31,6 +31,9 @@ namespace ProbablyStolenZhTW
         }
 
         internal static bool IsChinese(string localeCode) => localeCode != null && localeCode.StartsWith("zh", StringComparison.Ordinal);
+
+        // Whether the selected language is the one the mod translates.
+        internal static bool Active => IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code);
     }
 
     // The mod folder is only known to ModHelper after Init returns, so data loads on the first frame.
@@ -59,10 +62,12 @@ namespace ProbablyStolenZhTW
         private void Update()
         {
             Changelog.Update();
+            Strings.Update();
             // Text shown before the data loaded is still Simplified Chinese: redraw it once localization is up.
             if (_refreshed || !LocalizationSettings.InitializationOperation.IsDone)
                 return;
             _refreshed = true;
+            Strings.CheckSources();
             LocalizationSettings.SelectedLocaleChanged += Guard.LocaleChanged;
             Guard.LocaleChanged(LocalizationSettings.SelectedLocale);
             Strings.RefreshShownText();

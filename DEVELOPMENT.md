@@ -6,9 +6,9 @@
 
 | 位置 | 作用 |
 |---|---|
-| `LocalizedStringDatabase.GenerateLocalizedString` | 遊戲第一次用到某張簡中字串表時，把表內條目換成譯文（同時記下原文，切回簡體中文時換回去）。每條譯文附有英文原文的雜湊（不計空白與換行），英文改了就保留遊戲原文、交給簡體護欄轉換。譯文依英文意思寫成，官方簡中只換說法時不影響 |
-| `FontLoader.GetFontByRole` | 選正體中文時，把簡中字型資產換成用模組字型檔即時建立的繁中字型資產 |
-| `MainMenuUIController.HandleLocaleDropdown`、`OnLocaleChanged` | 在語言選單最後加上「正體中文」。兩個中文選項都用遊戲的中文語系（`zh`），選哪一個決定顯示譯文或原版簡中，並存進遊戲設定 |
+| `LocalizedStringDatabase.GenerateLocalizedString` | 遊戲第一次用到某張簡中字串表時，把表內條目換成譯文。每條譯文附有英文原文的雜湊（不計空白與換行）；本地化系統就緒後，模組以非同步方式載入英文字串表逐條比對，比完即釋放。英文改了就保留遊戲原文、交給簡體護欄轉換。譯文依英文意思寫成，官方簡中只換說法時不影響（刻意不比對簡中：官方簡中在幾次更新間改來改去，比對簡中會讓譯文跟著失效） |
+| `FontLoader.GetFontByRole` | 選中文時，把簡中字型資產換成用模組字型檔即時建立的繁中字型資產 |
+| `MainMenuUIController.HandleLocaleDropdown` | 把語言選單的「Simplified Chinese」改名為「正體中文」。模組沿用遊戲的中文語系（`zh`），選中文即顯示譯文 |
 
 模組不需要任何額外權限（遊戲的模組掃描不會偵測到檔案、網路等能力），檔案一律透過 `ModHelper` 讀取。
 

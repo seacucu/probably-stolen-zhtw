@@ -22,7 +22,7 @@ namespace ProbablyStolenZhTW
             bool tested = IsTested(__instance);
             if (!tested && !IsLabel(__instance))
                 return;
-            if (string.IsNullOrEmpty(value) || !Indents.Chinese)
+            if (string.IsNullOrEmpty(value) || !ZhTwMod.Active)
                 return;
             // Matching the label copies the test result into it, so either form can arrive in either box.
             string body;

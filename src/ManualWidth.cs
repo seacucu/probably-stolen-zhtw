@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using HarmonyLib;
-using UnityEngine.Localization.Settings;
 
 namespace ProbablyStolenZhTW
 {
@@ -11,7 +10,7 @@ namespace ProbablyStolenZhTW
     internal static class ManualWidth
     {
         private static float Factor(float game) =>
-            ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code) ? 1f : game;
+            ZhTwMod.Active ? 1f : game;
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Localization.Settings;
 using UnityEngine.TextCore.LowLevel;
 
 namespace ProbablyStolenZhTW
@@ -160,7 +159,7 @@ namespace ProbablyStolenZhTW
         // Texts that were given the game's font before the mod loaded, or that set it in the scene.
         internal static void SwapTexts()
         {
-            if (!ZhTwMod.IsChinese(LocalizationSettings.SelectedLocale?.Identifier.Code))
+            if (!ZhTwMod.Active)
                 return;
             foreach (var text in Resources.FindObjectsOfTypeAll<TMP_Text>())
             {
