@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Localization.Components;
+using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 
 namespace ProbablyStolenZhTW
@@ -11,7 +12,9 @@ namespace ProbablyStolenZhTW
     {
         private const string DataFile = "data/strings.json";
 
-        // Table collection -> key -> [FNV-1a hash of the zh-CN source, zh-TW text].
+        // Table collection -> key -> [FNV-1a hash of the English source, zh-TW text]. The translation follows
+        // the English meaning, so only an English change makes it outdated; the Simplified Chinese wording
+        // changes back and forth between game updates without changing the meaning.
         private static Dictionary<string, Dictionary<string, string[]>> _tables;
 
         // Table objects already patched (a reloaded table is a new object).
@@ -38,14 +41,18 @@ namespace ProbablyStolenZhTW
                 return;
             if (!_tables.TryGetValue(table.TableCollectionName, out var rows))
                 return;
+            var english = LocalizationSettings.StringDatabase.GetTable(table.TableCollectionName,
+                LocalizationSettings.AvailableLocales.GetLocale("en"));
+            if (english == null)
+                ZhTwMod.Log.Warning($"找不到英文字串表 {table.TableCollectionName}，這張表改由簡體護欄轉換");
             int applied = 0, changed = 0;
             foreach (StringTableEntry entry in table.Values)
             {
                 if (entry == null || entry.Key == null || !rows.TryGetValue(entry.Key, out var row))
                     continue;
-                // An entry whose source text changed in a game update keeps the game's text until the
+                // An entry whose English source changed in a game update keeps the game's text until the
                 // translation is updated, rather than showing an outdated line; Guard converts it on screen.
-                if (Hash(entry.Value) == row[0])
+                if (english != null && Hash(english.GetEntry(entry.KeyId)?.Value) == row[0])
                 {
                     entry.Value = row[1];
                     applied++;
@@ -67,12 +74,15 @@ namespace ProbablyStolenZhTW
             }
         }
 
-        // FNV-1a 32-bit over UTF-16 code units; scripts/build_full.py writes the same hash.
+        // FNV-1a 32-bit over UTF-16 code units, skipping spaces, tabs and line breaks (the game tidies those in
+        // the English text without changing it); scripts/build_full.py writes the same hash.
         private static string Hash(string text)
         {
             uint h = 0x811C9DC5;
             foreach (char c in text ?? "")
             {
+                if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
+                    continue;
                 h ^= c;
                 h *= 0x01000193;
             }

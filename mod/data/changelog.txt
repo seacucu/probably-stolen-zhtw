@@ -2,6 +2,13 @@
 # number, then an optional name. A version without items is listed nowhere. The mod shows the history
 # in game; tools\build.ps1 writes it into the Workshop description and the release notes.
 
+1.5.4
+- 翻譯 11/9 遊戲更新新增的文字（盧的第二張置物櫃紙條）。
+- 11/9 遊戲更新把官方簡中的部分用詞改回舊版，使這些文字與機器說明沒有套用正體譯文，現已恢復；之後官方簡中再更動用詞，也不會再影響譯文。
+- 統一一處與客人名稱不一致的譯名。
+- 機器升級欄位的「效率」改為「能效」，「上層區藥商」改為「上層區藥劑師」，與其他地方的用詞一致。
+- 機器說明的提示框改為與其他提示框同寬，不再過寬或超出畫面。
+
 1.5.3
 - 模組在遊戲原有機制之外，針對機器說明另行加入例外判斷，讀取存檔時會辨識機器內的舊版說明並更新為最新譯文，並一併統一遊戲原本不一致的屬性順序。
 
