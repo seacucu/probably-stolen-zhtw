@@ -2,6 +2,9 @@
 # number, then an optional name. A version without items is listed nowhere. The mod shows the history
 # in game; tools\build.ps1 writes it into the Workshop description and the release notes.
 
+1.5.5 hotfix
+- 修正 1.5.4 被遊戲的模組安全檢查擋下、無法啟用的問題。
+
 1.5.4
 - 翻譯 11/9 遊戲更新新增的文字（盧的第二張置物櫃紙條）。
 - 11/9 遊戲更新把官方簡中的部分用詞改回舊版，使這些文字與機器說明沒有套用正體譯文，現已恢復；之後官方簡中再更動用詞，也不會再影響譯文。
