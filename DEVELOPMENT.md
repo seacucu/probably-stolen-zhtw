@@ -23,6 +23,7 @@ gh release create v1.5.1 dist\seacucu.zh-tw.zip --notes-file dist/release-notes.
 ```
 
 - 遊戲不在預設位置時，加上 `-GameDir <遊戲資料夾>`。
+- 打包前，建置會用已安裝遊戲本身的模組掃描器（`tools/ModScan`，呼叫遊戲的 `ModScanner.Scan`）掃過 `dist\seacucu.zh-tw\`。只要遊戲會拒絕啟用（硬性旗標、清單沒宣告的權限），或啟用時會要求玩家確認（即將淘汰的規則），建置就會中止，不會打包。掃描用的是目前安裝的遊戲版本：正式版與測試版（open_beta）的規則不同，兩邊都有玩家時，要切換版本各建置一次。
 - 更新紀錄只寫在 `mod/data/changelog.txt`（新版本在最上面，沒有項目的版本不列出）。建置時會寫進 `workshop/description.txt` 的「更新紀錄」與 `dist/release-notes.md`；模組更新後也會在遊戲主選單跳出這次的紀錄，主選單的感謝按鈕可以看全部紀錄。
 - 發佈 GitHub Release 時，`.github/workflows/workshop.yml` 會把附檔 `seacucu.zh-tw.zip` 上傳到 `workshop/publishedfileid.txt` 指定的工作坊項目，
   Release 說明會成為工作坊的更新說明。工作坊頁面的標題、說明與預覽圖取自 main 分支的 `workshop/title.txt`、`description.txt`、`preview.png`，每次上傳都會覆寫。

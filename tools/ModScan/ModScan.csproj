@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Runs the game's own mod scanner (ModScanner in Assembly-CSharp) over a built mod folder, the same check the
+       game makes before it activates a mod. Loads the game's assemblies at run time, so it scans with whichever
+       build (public or beta) is installed. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

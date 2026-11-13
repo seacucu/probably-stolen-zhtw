@@ -2,6 +2,7 @@
 #   dist\seacucu.zh-tw\  manifest.xml, ProbablyStolenZhTW.dll, data\, fonts\, LICENSE.txt
 #   dist\seacucu.zh-tw.zip  the same folder, attached to GitHub releases
 #   dist\release-notes.md   this version's changelog, the release notes (empty when it has none)
+# The folder is scanned with the installed game's own mod scanner (tools\ModScan) before it is packed.
 # -Install also copies it to <game>\Mods\ for local testing.
 param(
     [string]$GameDir = "C:\Program Files (x86)\Steam\steamapps\common\Probably Stolen",
@@ -48,6 +49,12 @@ Copy-Item "$root\mod\*" $out -Recurse
 Copy-Item "$root\build\ProbablyStolenZhTW.dll" $out
 Copy-Item "$root\LICENSE" "$out\LICENSE.txt"
 Write-Host "Built $out"
+
+# The game scans a mod before activating it; stop here rather than pack a build it would refuse or prompt for.
+dotnet build "$root\tools\ModScan\ModScan.csproj" -c Release -o "$root\build\ModScan" --nologo -v q
+if ($LASTEXITCODE -ne 0) { throw "dotnet build of tools\ModScan failed" }
+& "$root\build\ModScan\ModScan.exe" $GameDir $out
+if ($LASTEXITCODE -ne 0) { throw "the game's mod scanner would refuse this build or ask players to approve it" }
 
 # Release asset; entry names use "/" so the zip also unpacks on Linux (the Workshop upload runs there).
 Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
