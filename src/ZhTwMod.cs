@@ -69,6 +69,7 @@ namespace ProbablyStolenZhTW
             _refreshed = true;
             Strings.CheckSources();
             LocalizationSettings.SelectedLocaleChanged += Guard.LocaleChanged;
+            LocalizationSettings.SelectedLocaleChanged += Strings.LocaleChanged;
             Guard.LocaleChanged(LocalizationSettings.SelectedLocale);
             Strings.RefreshShownText();
             Fonts.SwapTexts();

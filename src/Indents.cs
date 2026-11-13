@@ -85,6 +85,21 @@ namespace ProbablyStolenZhTW
         }
     }
 
+    // The conversation recorder puts a half-width space in front of every line, so a line's first row starts half a
+    // character to the right of the rows it wraps onto. Chinese drops it.
+    [HarmonyPatch(typeof(RecorderUIManager), nameof(RecorderUIManager.RefreshUI))]
+    internal static class RecorderIndentPatch
+    {
+        private static void Postfix(List<TMPro.TextMeshProUGUI> ___elementList)
+        {
+            if (!ZhTwMod.Active || ___elementList == null)
+                return;
+            foreach (var element in ___elementList)
+                if (element.gameObject.activeSelf && element.text.StartsWith(" "))
+                    element.text = element.text.Substring(1);
+        }
+    }
+
     // Notes keep the text they were created with in the save, so notes from before the translations lost their
     // indents still carry them.
     [HarmonyPatch(typeof(PaperUIManager), nameof(PaperUIManager.OpenUI))]

@@ -27,6 +27,10 @@ namespace ProbablyStolenZhTW
         private static readonly Dictionary<string, AsyncOperationHandle<StringTable>> Loading =
             new Dictionary<string, AsyncOperationHandle<StringTable>>();
 
+        // Chinese tables the mod loads to patch, kept loaded so the game formats from the patched objects.
+        private static readonly Dictionary<string, AsyncOperationHandle<StringTable>> Targets =
+            new Dictionary<string, AsyncOperationHandle<StringTable>>();
+
         // Table objects already patched (a reloaded table is a new object).
         private static readonly HashSet<StringTable> Patched = new HashSet<StringTable>();
 
@@ -58,6 +62,8 @@ namespace ProbablyStolenZhTW
         // loading or releasing a table is safe. Redraws the shown text once every collection is checked.
         internal static void Update()
         {
+            LoadTargets();
+            PatchLoaded();
             if (Loading.Count == 0)
                 return;
             foreach (var name in new List<string>(Loading.Keys))
@@ -83,7 +89,51 @@ namespace ProbablyStolenZhTW
             foreach (var keys in Current.Values)
                 current += keys.Count;
             ZhTwMod.Log.Log($"英文原文比對完成：{current} 條譯文可套用");
-            RefreshShownText();
+            _reload = true;
+        }
+
+        // A language switch releases every loaded table, so the Chinese tables are loaded again once the switch is
+        // done. Loading them inside the switch's callback breaks the localization system's own reload.
+        internal static void LocaleChanged(Locale locale)
+        {
+            Targets.Clear();
+            _reload = true;
+        }
+
+        private static bool _reload;
+
+        // Loads the Chinese tables to patch, once the English check is done and localization is not switching.
+        private static void LoadTargets()
+        {
+            if (!_reload || Loading.Count != 0 || !LocalizationSettings.InitializationOperation.IsDone)
+                return;
+            _reload = false;
+            var locale = LocalizationSettings.SelectedLocale;
+            if (locale == null || !ZhTwMod.IsChinese(locale.Identifier.Code))
+                return;
+            foreach (var name in Current.Keys)
+                Targets[name] = LocalizationSettings.StringDatabase.GetTableAsync(name, locale);
+        }
+
+        // Patches the Chinese tables that finished loading and redraws the shown text with them.
+        private static void PatchLoaded()
+        {
+            if (Targets.Count == 0)
+                return;
+            bool patched = false;
+            foreach (var name in new List<string>(Targets.Keys))
+            {
+                var handle = Targets[name];
+                if (!handle.IsValid())
+                {
+                    LocaleChanged(LocalizationSettings.SelectedLocale);
+                    return;
+                }
+                if (handle.IsDone && Apply(handle.Result))
+                    patched = true;
+            }
+            if (patched)
+                RefreshShownText();
         }
 
         private static Locale English => LocalizationSettings.AvailableLocales.GetLocale("en");
@@ -107,17 +157,16 @@ namespace ProbablyStolenZhTW
             return current;
         }
 
-        // Called before the game formats any entry of the table (Patches.GenerateLocalizedString). A table whose
-        // English check has not finished is left as it is and patched on a later call.
-        internal static void Apply(StringTable table)
+        // Writes the translations into a Chinese table; false when the table was already patched.
+        private static bool Apply(StringTable table)
         {
-            if (_tables == null || table == null || !ZhTwMod.IsChinese(table.LocaleIdentifier.Code))
-                return;
+            if (table == null || !ZhTwMod.IsChinese(table.LocaleIdentifier.Code))
+                return false;
             if (!_tables.TryGetValue(table.TableCollectionName, out var rows)
                 || !Current.TryGetValue(table.TableCollectionName, out var current))
-                return;
+                return false;
             if (!Patched.Add(table))
-                return;
+                return false;
             // An entry whose English source changed in a game update keeps the game's text until the translation
             // is updated, rather than showing an outdated line; Guard converts it on screen.
             foreach (StringTableEntry entry in table.Values)
@@ -125,6 +174,7 @@ namespace ProbablyStolenZhTW
                 if (entry != null && entry.Key != null && current.Contains(entry.Key))
                     entry.Value = rows[entry.Key][1];
             }
+            return true;
         }
 
         internal static void RefreshShownText()

@@ -6,14 +6,6 @@ using UnityEngine.Localization.Tables;
 
 namespace ProbablyStolenZhTW
 {
-    // Every localized string the game shows is formatted here, whether it comes from LocHelper,
-    // LocalizedString or LocalizeStringEvent.
-    [HarmonyPatch(typeof(LocalizedStringDatabase), "GenerateLocalizedString")]
-    internal static class GenerateLocalizedStringPatch
-    {
-        private static void Prefix(StringTable table) => Strings.Apply(table);
-    }
-
     // Every localized text component gets its font from here.
     [HarmonyPatch(typeof(FontLoader), nameof(FontLoader.GetFontByRole))]
     internal static class GetFontByRolePatch
