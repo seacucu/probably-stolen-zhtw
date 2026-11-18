@@ -5,15 +5,13 @@ using HarmonyLib;
 namespace ProbablyStolenZhTW
 {
     // The game tells water grades apart by their translated names. Customers compare against names kept in
-    // WaterFeatureHelper's static fields, filled once per launch, while a water's own name is looked up again
-    // each time or comes from the save, in whatever language it was made in. Once the two differ (a language
-    // change, a save started in Simplified Chinese), no water sells. Every grade name the game reads is
-    // turned into the static one for its purity, so the comparisons hold whatever the language.
+    // WaterFeatureHelper's static fields (kept in the selected language by CachedNames), while a water's own name
+    // is looked up again each time or comes from the save, in whatever language it was made in. Once the two
+    // differ (a language change, a save started in Simplified Chinese), no water sells. Every grade name the game
+    // reads is turned into the static one for its purity, so the comparisons hold whatever the language.
     //
-    // WaterFeatureHelper's fields are read only once the game is reading a water grade itself, from the
-    // non-inlined methods below. Touching the class any earlier (patching one of its methods, or reading a
-    // field when any other list or feature is read) can run its static initializer before the game's
-    // localization is ready, and the names are then kept in the table's Simplified Chinese for the session.
+    // WaterFeatureHelper's fields are read only from the non-inlined methods below, so that merely patching or
+    // compiling these patches never runs the class's static initializer.
     internal static class WaterGrades
     {
         private const string Category = "CATEGORY_WATER_PURITY";

@@ -2,6 +2,13 @@
 # number, then an optional name. A version without items is listed nowhere. The mod shows the history
 # in game; tools\build.ps1 writes it into the Workshop description and the release notes.
 
+1.5.8
+- 修正先用英文開遊戲、再切換成正體中文時，水質掃描器與水瓶說明裡的水質和污染物名稱仍顯示英文的問題。
+- 拋棄式電池說明中的英文「Disposable: cannot be recharged」改為「拋棄式：無法充電」。
+- 客人 John Smith 改譯「約翰．史密斯」（原為「王大明」），與其他人名的譯法一致。
+- 人名統一為「艾琳諾」（部分對話與物品原為「艾莉諾」）。
+- 「冰鎮」改為「冰過」；冰淇淋的「沒冷藏」改為「沒冷凍」；基因掃描器說明的「動物」改為「生物」。
+
 1.5.7
 - 修正在遊戲測試版（open_beta）啟用模組時，跳出「透過反射存取系統與引擎內部」權限警告的問題。
 - 主選單的「改裝件」改為「工作坊模組」。

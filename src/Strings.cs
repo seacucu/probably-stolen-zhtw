@@ -98,9 +98,10 @@ namespace ProbablyStolenZhTW
         {
             Targets.Clear();
             _reload = true;
+            _namesRefreshed = false;
         }
 
-        private static bool _reload;
+        private static bool _reload, _namesRefreshed;
 
         // Loads the Chinese tables to patch, once the English check is done and localization is not switching.
         private static void LoadTargets()
@@ -110,17 +111,21 @@ namespace ProbablyStolenZhTW
             _reload = false;
             var locale = LocalizationSettings.SelectedLocale;
             if (locale == null || !ZhTwMod.IsChinese(locale.Identifier.Code))
+            {
+                CachedNames.Refresh();
                 return;
+            }
             foreach (var name in Current.Keys)
                 Targets[name] = LocalizationSettings.StringDatabase.GetTableAsync(name, locale);
         }
 
-        // Patches the Chinese tables that finished loading and redraws the shown text with them.
+        // Patches the Chinese tables that finished loading, then refreshes the names the game cached and redraws the
+        // shown text with them.
         private static void PatchLoaded()
         {
             if (Targets.Count == 0)
                 return;
-            bool patched = false;
+            bool patched = false, done = true;
             foreach (var name in new List<string>(Targets.Keys))
             {
                 var handle = Targets[name];
@@ -129,8 +134,17 @@ namespace ProbablyStolenZhTW
                     LocaleChanged(LocalizationSettings.SelectedLocale);
                     return;
                 }
-                if (handle.IsDone && Apply(handle.Result))
+                if (!handle.IsDone)
+                    done = false;
+                else if (Apply(handle.Result))
                     patched = true;
+            }
+            // A switch back can hand out the tables patched before, so the names are refreshed once all are loaded.
+            if (done && !_namesRefreshed)
+            {
+                _namesRefreshed = true;
+                CachedNames.Refresh();
+                patched = true;
             }
             if (patched)
                 RefreshShownText();
